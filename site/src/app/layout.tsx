@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script 
           async 
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5995172189982724" 
-          crossOrigin="anonymous\"
+          crossOrigin="anonymous"
           strategy="beforeInteractive"
         />
       </head>
