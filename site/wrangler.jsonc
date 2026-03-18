@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "ai-productivity-hub",
+  "compatibility_date": "2025-09-27",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "ai-productivity-hub"
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "SENDGRID_FROM_EMAIL": "contact@aiproductivityhub.co",
+    "CONTACT_TO_EMAIL": "moonsmoke.contact@gmail.com"
+  }
+  // Secret variables (SENDGRID_API_KEY) should be set via:
+  //   Local dev:  .dev.vars file
+  //   Production: `npx wrangler secret put SENDGRID_API_KEY`
+  //   Or via Cloudflare Dashboard → Workers → Settings → Variables and Secrets
+}
