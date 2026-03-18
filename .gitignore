@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Next.js build
+.next/
+out/
+
+# OpenNext / Cloudflare build
+.open-next/
+
+# Environment variables
+.env
+.env.local
+.dev.vars
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Debug logs
+npm-debug.log*
