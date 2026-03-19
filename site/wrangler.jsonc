@@ -22,6 +22,10 @@
   "observability": {
     "enabled": true
   },
+  "routes": [
+    { "pattern": "aiproductivityhub.co/*", "custom_domain": true },
+    { "pattern": "www.aiproductivityhub.co/*", "custom_domain": true }
+  ],
   "vars": {
     "SENDGRID_FROM_EMAIL": "contact@aiproductivityhub.co",
     "CONTACT_TO_EMAIL": "moonsmoke.contact@gmail.com"
