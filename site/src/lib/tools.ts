@@ -35,6 +35,7 @@ export const categories: Category[] = [
   { name: "Audio", slug: "audio", icon: "\uD83C\uDFB5" },
   { name: "Meeting Assistants", slug: "meeting-assistants", icon: "\uD83D\uDCC5" },
   { name: "Code", slug: "code", icon: "\uD83D\uDCBB" },
+  { name: "Hosting", slug: "hosting", icon: "\u2601\uFE0F" },
 ];
 
 export const tools: Tool[] = [
@@ -546,5 +547,49 @@ export const tools: Tool[] = [
     bestFor: "Researchers, analysts, and knowledge workers who need fast, reliable answers with sources",
     overview:
       "Perplexity AI reimagines web search as a conversation with a knowledgeable assistant that always shows its sources. Instead of returning a list of links, Perplexity synthesizes information from multiple web pages into a coherent, cited answer. The Pro Search feature takes this further by breaking complex questions into sub-queries, conducting multi-step research, and presenting a comprehensive analysis. For professionals who spend significant time researching topics, comparing options, or staying current with industry developments, Perplexity offers a dramatically faster path from question to reliable answer.",
+  },
+  {
+    slug: "cloudways",
+    name: "Cloudways",
+    description:
+      "Cloudways is a managed cloud hosting platform that simplifies server management for agencies, e-commerce stores, and growing businesses. It offers one-click deployments on top cloud providers like AWS, Google Cloud, DigitalOcean, and Vultr.",
+    category: "Hosting",
+    features: [
+      "Managed hosting on AWS, Google Cloud, DigitalOcean, Vultr, and Linode",
+      "One-click application deployment for WordPress, Magento, Laravel, and more",
+      "Built-in CDN, free SSL certificates, and advanced caching",
+      "Automated backups with one-click restore",
+      "Server cloning, staging environments, and team collaboration",
+    ],
+    color: "from-indigo-600 to-purple-700",
+    tagline: "Managed cloud hosting without the complexity",
+    pricing: [
+      { tier: "DigitalOcean", price: "From $14/mo", note: "1GB RAM, 25GB storage" },
+      { tier: "AWS", price: "From $38/mo", note: "2GB RAM, 20GB storage" },
+      { tier: "Google Cloud", price: "From $37/mo", note: "1.7GB RAM, 20GB storage" },
+      { tier: "Vultr", price: "From $16/mo", note: "1GB RAM, 25GB storage" },
+    ],
+    useCases: [
+      "Hosting high-traffic WordPress and WooCommerce sites",
+      "Running multiple client sites for agencies on one platform",
+      "Deploying PHP, Laravel, and Magento applications with zero DevOps",
+      "Scaling e-commerce stores with auto-scaling cloud infrastructure",
+    ],
+    pros: [
+      "Choice of multiple cloud providers under one dashboard",
+      "Excellent performance with built-in caching and CDN",
+      "No lock-in — migrate away anytime with full server access",
+      "24/7 expert support with fast response times",
+    ],
+    cons: [
+      "No email hosting included — need a separate service",
+      "Pricing increases quickly when scaling to higher-tier servers",
+      "Less suited for static sites or serverless architectures",
+    ],
+    websiteUrl: "https://www.cloudways.com",
+    affiliateUrl: "https://www.cloudways.com/en/?id=2102009",
+    bestFor: "Agencies, e-commerce businesses, and developers who want managed cloud hosting without server administration headaches",
+    overview:
+      "Cloudways bridges the gap between cheap shared hosting and complex self-managed cloud servers. Instead of wrestling with server configuration, security patches, and performance tuning, you get a clean dashboard that deploys applications on world-class infrastructure from AWS, Google Cloud, DigitalOcean, Vultr, or Linode. The platform handles the heavy lifting of server management — automated backups, OS-level security, built-in caching with Varnish and Redis, and free SSL — while still giving you SSH access and full control when you need it. For agencies managing multiple client sites or e-commerce stores that need reliable performance, Cloudways delivers enterprise-grade hosting without requiring a dedicated DevOps team.",
   },
 ];
