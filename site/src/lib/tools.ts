@@ -1,3 +1,6 @@
+export type LinkStatus = "ok" | "broken" | "redirect" | "unknown";
+export type ReviewStatus = "current" | "stale" | "needs_review" | "draft";
+
 export interface Tool {
   slug: string;
   name: string;
@@ -15,6 +18,13 @@ export interface Tool {
   isFree?: boolean;
   bestFor: string;
   overview: string;
+  // Health & review tracking (populated by automation crons)
+  lastReviewedAt?: string;
+  reviewStatus?: ReviewStatus;
+  linkStatus?: LinkStatus;
+  linkError?: string;
+  lastCheckedAt?: string;
+  rating?: number;
 }
 
 export interface Category {

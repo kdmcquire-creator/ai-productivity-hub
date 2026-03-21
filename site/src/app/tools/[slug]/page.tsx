@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { tools, categories } from "@/lib/tools";
 import AdUnit from "@/components/AdUnit";
 import AffiliateBlock from "@/components/AffiliateBlock";
+import { ToolJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -38,6 +39,14 @@ export default async function ToolPage({ params }: PageProps) {
 
   return (
     <article className="py-12">
+      <ToolJsonLd tool={tool} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://aiproductivityhub.co" },
+          { name: "Tools", url: "https://aiproductivityhub.co/tools/" },
+          { name: tool.name, url: `https://aiproductivityhub.co/tools/${tool.slug}/` },
+        ]}
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-10">

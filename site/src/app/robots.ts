@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/private/", "/api/"],
+        disallow: ["/api/", "/go/"],
       },
     ],
     sitemap: "https://aiproductivityhub.co/sitemap.xml",

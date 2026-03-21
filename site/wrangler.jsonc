@@ -22,12 +22,27 @@
   "observability": {
     "enabled": true
   },
+  // Single cron trigger dispatches to all scheduled endpoints
+  // Each endpoint self-determines what to process
+  "triggers": {
+    "crons": [
+      "0 0,6,12,18 * * *"
+    ]
+  },
   "vars": {
+    "NEXT_PUBLIC_GTM_ID": "GTM-MXHMH4NS",
     "SENDGRID_FROM_EMAIL": "contact@aiproductivityhub.co",
-    "CONTACT_TO_EMAIL": "moonsmoke.contact@gmail.com"
+    "SENDGRID_NEWSLETTER_FROM_EMAIL": "newsletter@aiproductivityhub.co",
+    "CONTACT_TO_EMAIL": "moonsmoke.contact@gmail.com",
+    "STALE_DAYS": "90"
   }
-  // Secret variables (SENDGRID_API_KEY) should be set via:
+  // Secret variables should be set via:
   //   Local dev:  .dev.vars file
-  //   Production: `npx wrangler secret put SENDGRID_API_KEY`
-  //   Or via Cloudflare Dashboard → Workers → Settings → Variables and Secrets
+  //   Production: `npx wrangler secret put <KEY>`
+  //
+  // Required secrets:
+  //   SENDGRID_API_KEY     - SendGrid mail API key
+  //   CRON_SECRET          - Bearer token for cron endpoint auth
+  //   ADMIN_API_KEY        - x-api-key header for admin endpoints
+  //   ANTHROPIC_API_KEY    - Claude API key for content generation
 }

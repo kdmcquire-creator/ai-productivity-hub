@@ -2,12 +2,17 @@ import Link from "next/link";
 import { tools, categories } from "@/lib/tools";
 import { blogPosts } from "@/lib/blog";
 import AdUnit from "@/components/AdUnit";
+import { WebSiteJsonLd, OrganizationJsonLd } from "@/components/JsonLd";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 export default function HomePage() {
   const featuredTools = tools.slice(0, 6);
 
   return (
     <>
+      <WebSiteJsonLd />
+      <OrganizationJsonLd />
+
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 to-indigo-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -92,6 +97,13 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter Signup */}
+      <section className="py-12">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <NewsletterSignup source="homepage" />
         </div>
       </section>
 
