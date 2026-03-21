@@ -23,12 +23,16 @@ jobs:
       - name: Install dependencies
         run: cd site && npm ci
 
-      - name: Build and Deploy
+      - name: Build Next.js
+        run: cd site && npm run build
+
+      - name: Build for Cloudflare (OpenNext)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: cd site && npx opennextjs-cloudflare build
+
+      - name: Deploy to Cloudflare Workers
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: cd site && npm run deploy
-
-      - name: Build only (PRs)
-        if: github.event_name == 'pull_request'
-        run: cd site && npm run build
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: cd site && npx wrangler deploy
