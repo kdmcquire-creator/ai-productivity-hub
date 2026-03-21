@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   },
   description:
     "Discover, compare, and choose the best AI productivity tools for writing, design, marketing, development, and more. In-depth reviews, comparisons, and guides to help you work smarter.",
+  icons: {
+    icon: "/logo.svg",
+    apple: "/logo.svg",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",

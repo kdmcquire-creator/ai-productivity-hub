@@ -44,16 +44,22 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">Explore by Category</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {categories.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/tools/?category=${cat.slug}`}
-                className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-400 hover:shadow-md transition"
-              >
-                <span className="text-2xl">{cat.icon}</span>
-                <span className="font-semibold text-gray-800">{cat.name}</span>
-              </Link>
-            ))}
+            {categories.map((cat) => {
+              const count = tools.filter((t) => t.category === cat.name).length;
+              return (
+                <Link
+                  key={cat.slug}
+                  href={`/tools/category/${cat.slug}/`}
+                  className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all group"
+                >
+                  <span className="text-2xl group-hover:scale-110 transition-transform">{cat.icon}</span>
+                  <div>
+                    <span className="font-semibold text-gray-800 group-hover:text-blue-600 transition">{cat.name}</span>
+                    <span className="block text-xs text-gray-400">{count} tool{count !== 1 ? "s" : ""}</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

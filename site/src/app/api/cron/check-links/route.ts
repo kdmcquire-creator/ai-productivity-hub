@@ -35,6 +35,27 @@ async function checkUrl(
     });
 
     clearTimeout(timeout);
+
+    // Retry with GET if HEAD is rejected (some sites block HEAD requests)
+    if (response.status === 405 || response.status === 403) {
+      const controller2 = new AbortController();
+      const timeout2 = setTimeout(() => controller2.abort(), timeoutMs);
+      const retryResponse = await fetch(url, {
+        method: "GET",
+        redirect: "follow",
+        signal: controller2.signal,
+        headers: {
+          "User-Agent":
+            "AIProductivityHub-LinkChecker/1.0 (+https://aiproductivityhub.co)",
+        },
+      });
+      clearTimeout(timeout2);
+      return {
+        status: retryResponse.status,
+        responseTimeMs: Date.now() - start,
+      };
+    }
+
     return {
       status: response.status,
       responseTimeMs: Date.now() - start,

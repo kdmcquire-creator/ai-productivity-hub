@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" width="280" height="64" role="img" aria-label="AI Productivity Hub">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb"/>
+      <stop offset="100%" style="stop-color:#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="bolt-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#bfdbfe;stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Hexagon icon -->
+  <polygon
+    points="32,4 56,17 56,47 32,60 8,47 8,17"
+    fill="url(#grad)"
+  />
+
+  <!-- Lightning bolt inside hexagon -->
+  <polygon
+    points="36,12 24,34 31,34 28,52 40,30 33,30"
+    fill="url(#bolt-grad)"
+  />
+
+  <!-- Text: "AI Productivity Hub" -->
+  <!-- "AI" — bold, primary blue -->
+  <text
+    x="72"
+    y="26"
+    font-family="'Inter', 'Segoe UI', system-ui, sans-serif"
+    font-size="16"
+    font-weight="700"
+    letter-spacing="0.04em"
+    fill="#2563eb"
+  >AI</text>
+
+  <!-- "Productivity Hub" — lighter weight, dark slate -->
+  <text
+    x="72"
+    y="46"
+    font-family="'Inter', 'Segoe UI', system-ui, sans-serif"
+    font-size="14"
+    font-weight="500"
+    letter-spacing="0.02em"
+    fill="#1e293b"
+  >Productivity Hub</text>
+</svg>

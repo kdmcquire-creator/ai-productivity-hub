@@ -5,6 +5,7 @@ import { tools, categories } from "@/lib/tools";
 import AdUnit from "@/components/AdUnit";
 import AffiliateBlock from "@/components/AffiliateBlock";
 import { ToolJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
+import RelatedTools from "@/components/RelatedTools";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -192,28 +193,11 @@ export default async function ToolPage({ params }: PageProps) {
         <AffiliateBlock placement="toolPage" />
 
         {/* Related Tools */}
-        {relatedTools.length > 0 && (
-          <section className="mt-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Tools</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedTools.map((rt) => (
-                <Link
-                  key={rt.slug}
-                  href={`/tools/${rt.slug}/`}
-                  className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition"
-                >
-                  <div className={`h-2 bg-gradient-to-r ${rt.color}`} />
-                  <div className="p-5">
-                    <h3 className="font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition">
-                      {rt.name}
-                    </h3>
-                    <p className="text-sm text-gray-600 line-clamp-2">{rt.tagline}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
+        <RelatedTools
+          currentSlug={tool.slug}
+          category={tool.category}
+          allTools={tools}
+        />
       </div>
     </article>
   );
