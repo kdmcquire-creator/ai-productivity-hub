@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
-import sgMail from "@sendgrid/mail";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
+  // Rate limit contact form submissions
+  const rateLimitError = rateLimit(request, {
+    maxRequests: 3,
+    windowMs: 300_000,
+  });
+  if (rateLimitError) return rateLimitError;
+
   try {
     const body = await request.json();
     const { name, email, message } = body;
@@ -24,30 +31,75 @@ export async function POST(request: Request) {
       );
     }
 
-    sgMail.setApiKey(apiKey);
+    const toEmail =
+      process.env.CONTACT_TO_EMAIL || "contact@aiproductivityhub.co";
+    const fromEmail =
+      process.env.SENDGRID_FROM_EMAIL || "noreply@aiproductivityhub.co";
 
-    const toEmail = process.env.CONTACT_TO_EMAIL || "contact@aiproductivityhub.co";
-    const fromEmail = process.env.SENDGRID_FROM_EMAIL || "noreply@aiproductivityhub.co";
-
-    await sgMail.send({
-      to: toEmail,
-      from: fromEmail,
-      replyTo: email,
-      subject: `Contact Form: Message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <hr />
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, "<br />")}</p>
-      `,
+    // Use SendGrid v3 Mail Send API directly (fetch-based, Cloudflare Workers compatible)
+    const sgResponse = await fetch("https://api.sendgrid.com/v3/mail/send", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        personalizations: [{ to: [{ email: toEmail }] }],
+        from: { email: fromEmail, name: "AI Productivity Hub" },
+        reply_to: { email, name },
+        subject: `Contact Form: Message from ${name}`,
+        content: [
+          {
+            type: "text/plain",
+            value: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+          },
+          {
+            type: "text/html",
+            value: `
+              <h2>New Contact Form Submission</h2>
+              <p><strong>Name:</strong> ${name}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              <hr />
+              <p><strong>Message:</strong></p>
+              <p>${message.replace(/\n/g, "<br />")}</p>
+            `,
+          },
+        ],
+      }),
     });
+
+    if (!sgResponse.ok) {
+      const errorBody = await sgResponse.text();
+      console.error(
+        JSON.stringify({
+          type: "contact_form_send_error",
+          status: sgResponse.status,
+          body: errorBody,
+        })
+      );
+      return NextResponse.json(
+        { error: "Failed to send message. Please try again later." },
+        { status: 500 }
+      );
+    }
+
+    console.log(
+      JSON.stringify({
+        type: "contact_form_sent",
+        to: toEmail,
+        from: email,
+        name,
+      })
+    );
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Contact form error:", error);
+    console.error(
+      JSON.stringify({
+        type: "contact_form_error",
+        error: error instanceof Error ? error.message : "Unknown",
+      })
+    );
     return NextResponse.json(
       { error: "Failed to send message. Please try again later." },
       { status: 500 }
