@@ -63,38 +63,41 @@ export default async function CategoryPage({ params }: PageProps) {
       />
       <ToolDirectoryJsonLd tools={categoryTools} />
 
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-12">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-4xl">{category.icon}</span>
-              <div>
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-                  Best AI {category.name} Tools
-                </h1>
-                <p className="text-gray-500 mt-1">
-                  {categoryTools.length} tool
-                  {categoryTools.length !== 1 ? "s" : ""} reviewed
-                </p>
-              </div>
+      {/* Gradient Hero Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+          <div className="flex items-center gap-4 mb-3">
+            <span className="text-5xl drop-shadow-sm">{category.icon}</span>
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight">
+                Best AI {category.name} Tools
+              </h1>
+              <p className="text-blue-100 mt-1 text-sm sm:text-base font-medium">
+                {categoryTools.length} tool{categoryTools.length !== 1 ? "s" : ""} reviewed
+              </p>
             </div>
-            <p className="text-lg text-gray-600 max-w-3xl">
-              Compare the top AI-powered {category.name.toLowerCase()} tools.
-              Each tool has been reviewed with detailed features, pricing, pros
-              and cons to help you make the right choice.
-            </p>
           </div>
+          <p className="text-blue-100 text-base sm:text-lg max-w-3xl mt-4 leading-relaxed">
+            Compare the top AI-powered {category.name.toLowerCase()} tools.
+            Each tool has been reviewed with detailed features, pricing, pros
+            and cons to help you make the right choice.
+          </p>
+        </div>
+      </div>
 
+      <section className="py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Tool Grid */}
           {categoryTools.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">
-                No tools in this category yet. Check back soon!
+            <div className="text-center py-20">
+              <div className="text-6xl mb-4">🔍</div>
+              <p className="text-gray-500 text-lg font-medium mb-2">
+                No tools in this category yet.
               </p>
+              <p className="text-gray-400 text-sm mb-6">Check back soon — we&apos;re adding new tools regularly.</p>
               <Link
                 href="/tools/"
-                className="mt-4 inline-block text-blue-600 hover:underline"
+                className="inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-blue-700 transition"
               >
                 Browse all tools
               </Link>
@@ -105,28 +108,33 @@ export default async function CategoryPage({ params }: PageProps) {
                 <Link
                   key={tool.slug}
                   href={`/tools/${tool.slug}/`}
-                  className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-blue-200 transition-all"
+                  className="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-blue-200 transition-all"
                 >
-                  <div
-                    className={`h-1.5 bg-gradient-to-r ${tool.color}`}
-                  />
+                  <div className={`h-1.5 bg-gradient-to-r ${tool.color}`} />
                   <div className="p-6">
-                    <h2 className="font-bold text-gray-900 text-lg mb-2 group-hover:text-blue-600 transition">
-                      {tool.name}
-                    </h2>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                    <div className="flex items-start justify-between mb-2">
+                      <h2 className="font-bold text-gray-900 text-lg group-hover:text-blue-600 transition leading-snug">
+                        {tool.name}
+                      </h2>
+                      {tool.isFree && (
+                        <span className="ml-2 shrink-0 text-xs font-semibold text-green-700 bg-green-50 border border-green-100 px-2.5 py-0.5 rounded-full whitespace-nowrap">
+                          Free tier
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2 leading-relaxed">
                       {tool.tagline}
                     </p>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs text-gray-500">
-                        {tool.isFree ? "Free tier available" : tool.pricing[0]?.price}
-                      </span>
-                    </div>
+                    {!tool.isFree && (
+                      <p className="text-xs text-gray-400 mb-3">
+                        Starting at {tool.pricing[0]?.price}
+                      </p>
+                    )}
                     <div className="flex flex-wrap gap-1.5">
                       {tool.features.slice(0, 3).map((f) => (
                         <span
                           key={f}
-                          className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full"
+                          className="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-medium"
                         >
                           {f}
                         </span>
@@ -140,7 +148,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
           {/* Other Categories */}
           <div className="mt-16 pt-10 border-t border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-5">
               Other Categories
             </h2>
             <div className="flex flex-wrap gap-3">
@@ -150,7 +158,7 @@ export default async function CategoryPage({ params }: PageProps) {
                   <Link
                     key={cat.slug}
                     href={`/tools/category/${cat.slug}/`}
-                    className="flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-2 text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-blue-600 transition"
+                    className="flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-2 text-sm font-medium text-gray-700 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 transition-all shadow-sm"
                   >
                     <span>{cat.icon}</span>
                     {cat.name}
