@@ -520,6 +520,96 @@ export const blogPosts: BlogPost[] = [
     },
   },
   {
+    slug: "ai-meeting-tools-fireflies-vs-otter-vs-calendly",
+    title: "The Ultimate Guide to AI Meeting Tools: Fireflies vs Otter vs Calendly",
+    excerpt:
+      "A practical comparison of the three most popular AI meeting tools. We break down transcription quality, scheduling automation, integrations, and pricing to help you build the ultimate meeting workflow.",
+    date: "March 16, 2026",
+    dateISO: "2026-03-16",
+    author: "Kyle McQuire",
+    authorSlug: "kyle-mcquire",
+    readTime: "10 min read",
+    category: "Comparison",
+    color: "from-rose-500 to-pink-600",
+    toolSlugs: ["fireflies-ai", "otter-ai", "calendly"],
+    sections: [
+      {
+        heading: "Overview",
+        body: "Meetings are one of the biggest productivity drains in modern work — but they do not have to be. The right AI meeting tools can handle scheduling, transcription, note-taking, and follow-up automatically, turning every meeting from a time sink into a well-documented, actionable event. Three tools dominate this space: Fireflies.ai (transcription and AI analysis), Otter.ai (real-time transcription and collaboration), and Calendly (intelligent scheduling). Each solves a different part of the meeting problem.",
+      },
+      {
+        heading: "1. Fireflies.ai: Best for Meeting Intelligence",
+        headingColor: "text-rose-700",
+        subtitle: "Best For: Teams that need searchable meeting history, CRM integration, and AI-generated action items.",
+        body: "Fireflies.ai acts as a silent participant in every meeting. It joins Zoom, Google Meet, and Microsoft Teams calls automatically, records and transcribes the conversation, and then uses AI to surface the most important information: action items, decisions made, topics discussed, and sentiment analysis. Its searchable meeting library is particularly powerful — you can search across every meeting ever recorded to find when a specific commitment was made or a price was mentioned.",
+        listItems: [
+          "Transcription accuracy: 90-95% for clear audio in English; degrades with heavy accents or multiple simultaneous speakers.",
+          "Standout features: AI-generated summaries, action item detection, CRM sync (Salesforce, HubSpot), speaker identification, meeting sentiment analysis.",
+          "Pricing: Free (800 mins storage, limited AI); Pro at $10/user/mo; Business at $19/user/mo; Enterprise custom.",
+          "Best for: Sales teams, agencies, and any team with high meeting volume that needs accountability and searchability.",
+        ],
+      },
+      {
+        heading: "2. Otter.ai: Best for Real-Time Collaboration",
+        headingColor: "text-rose-700",
+        subtitle: "Best For: Teams that want live transcription visible to all participants during the meeting.",
+        body: "Otter.ai's key differentiator is real-time transcription that all meeting participants can see simultaneously. While Fireflies works in the background and delivers results afterward, Otter creates a live, shared document during the meeting itself. Participants can highlight, comment, and assign action items while the conversation is happening. The OtterPilot feature joins meetings automatically and generates AI summaries and action items within minutes of the meeting ending.",
+        listItems: [
+          "Transcription accuracy: Comparable to Fireflies at 90-95%, with a slight edge for structured meetings with clear speakers.",
+          "Standout features: Live transcript visible to all participants, real-time highlights and comments, Zoom/Teams/Meet native integration, automated follow-up email.",
+          "Pricing: Free (300 mins/mo, 3 imports); Pro at $16.99/user/mo; Business at $30/user/mo.",
+          "Best for: Teams that collaborate during the meeting itself, educators, journalists, and anyone who wants a shared live document.",
+        ],
+      },
+      {
+        heading: "3. Calendly: Best for Eliminating Scheduling Back-and-Forth",
+        headingColor: "text-rose-700",
+        subtitle: "Best For: Professionals who spend significant time coordinating meeting times with clients or prospects.",
+        body: 'Calendly solves a different problem than Fireflies and Otter — not what happens during a meeting, but how you get the meeting on the calendar without the dreaded email chain. You share a Calendly link; the other person picks a time that works from your real-time availability; the meeting appears on both calendars automatically. AI-powered features include smart scheduling suggestions, buffer time recommendations, and round-robin assignment for team meetings. The latest versions use AI to analyze your meeting patterns and suggest optimal scheduling windows.',
+        listItems: [
+          "Standout features: Embeddable scheduling widget, round-robin team scheduling, automatic time zone detection, pre-meeting questionnaires, Zoom/Teams link auto-generation.",
+          "Integrations: Google Calendar, Outlook, Salesforce, HubSpot, Stripe (for paid consultations), Zapier.",
+          "Pricing: Free (1 event type, unlimited meetings); Standard at $10/user/mo; Teams at $16/user/mo; Enterprise custom.",
+          "Best for: Consultants, sales reps, coaches, recruiters, and any professional with high inbound meeting demand.",
+        ],
+      },
+      {
+        heading: "4. Head-to-Head: Which Tool for Which Problem?",
+        headingColor: "text-rose-700",
+        body: "These three tools are not direct competitors — they solve complementary parts of the meeting workflow. Here is how they stack up across the key decision criteria:",
+        listItems: [
+          "Transcription quality: Fireflies and Otter are nearly identical. Otter has a slight edge for structured meetings; Fireflies for noisy calls.",
+          "Post-meeting analysis: Fireflies wins with deeper AI summaries, CRM sync, and searchable meeting history across your entire organization.",
+          "Real-time collaboration: Otter wins — no other tool offers a live shared transcript.",
+          "Scheduling automation: Calendly wins decisively. Fireflies and Otter do not address scheduling at all.",
+          "Pricing for solo users: Calendly free tier is excellent; Fireflies free tier is adequate; Otter free tier is most restrictive.",
+          "Team features: All three have robust team plans. Fireflies has the best enterprise sales features; Otter has the best collaborative editing; Calendly has the best team scheduling.",
+        ],
+      },
+      {
+        heading: "5. The Optimal Meeting Stack",
+        headingColor: "text-rose-700",
+        body: "For most knowledge workers, the highest-ROI setup combines Calendly for scheduling with either Fireflies or Otter for transcription, depending on your collaboration style:",
+        orderedList: [
+          "Use Calendly to eliminate scheduling emails. Share your link; clients book directly. This alone saves 30-60 minutes per week for most professionals.",
+          "Use Fireflies.ai if you need searchable meeting history, CRM sync, or deep AI analysis of meeting content. Best for sales teams and agencies.",
+          "Use Otter.ai if your meetings benefit from real-time shared transcription where everyone can see and annotate live. Best for collaborative teams and remote workers.",
+          "For maximum ROI, connect all three via Zapier: Calendly triggers Fireflies to join → Fireflies summary pushes to your CRM → follow-up task auto-created in your project manager.",
+        ],
+      },
+    ],
+    verdict: {
+      heading: "Verdict: Your Meeting Tool Decision",
+      calloutStyle: "yellow",
+      body: "The right choice depends on your biggest meeting pain point:",
+      listItems: [
+        "If scheduling is your biggest time sink: Start with Calendly. The free tier handles most use cases, and even the paid plan ($10/mo) saves more time in the first week than it costs in a year.",
+        "If note-taking and follow-up is the problem: Choose Fireflies for sales/CRM-heavy workflows, or Otter for collaborative team environments. Both are strong; the choice comes down to whether you need live transcription or post-meeting intelligence.",
+        "Best overall stack: Calendly (Standard) + Fireflies.ai (Pro) = $20/mo combined. This covers the full meeting lifecycle from scheduling through follow-up for the price of a single business lunch.",
+      ],
+    },
+  },
+  {
     slug: "perplexity-ai-vs-chatgpt-vs-google-search",
     title: "Perplexity AI vs ChatGPT vs Google: Which Should Be Your Default Search Tool?",
     excerpt:

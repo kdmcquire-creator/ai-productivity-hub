@@ -174,6 +174,8 @@ export const tools: Tool[] = [
       "Advanced analytics locked behind higher tiers",
     ],
     websiteUrl: "https://fireflies.ai",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     bestFor: "Remote teams and sales professionals who need reliable meeting documentation",
     overview:
       "Fireflies.ai takes the busywork out of meetings by automatically joining your calls, recording the conversation, and producing accurate transcripts with AI-generated summaries. The platform integrates with every major conferencing tool and pushes meeting intelligence into your CRM, project management, and collaboration apps. Its searchable archive means you can find any discussion point from any meeting in seconds. For teams that spend hours in calls, Fireflies transforms meetings from ephemeral conversations into a structured, actionable knowledge base.",
@@ -259,6 +261,8 @@ export const tools: Tool[] = [
       "Cost adds up quickly on large teams",
     ],
     websiteUrl: "https://www.notion.so/product/ai",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     bestFor: "Teams already using Notion who want AI assistance without leaving their workspace",
     overview:
       "Notion AI brings artificial intelligence directly into the workspace millions of teams already use for wikis, project management, and documentation. Rather than switching to a separate AI tool, you can highlight text, ask a question, or generate content right where you work. The standout feature is the Q&A capability, which lets you ask natural language questions about information scattered across your entire Notion workspace and get instant, cited answers. For teams that live in Notion, the AI add-on is a natural productivity multiplier that eliminates context switching.",
@@ -301,6 +305,8 @@ export const tools: Tool[] = [
       "Requires internet connection for suggestions",
     ],
     websiteUrl: "https://github.com/features/copilot",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     bestFor: "Software developers looking to accelerate coding workflows and reduce boilerplate",
     overview:
       "GitHub Copilot has quickly become one of the most widely adopted AI developer tools, integrating directly into popular code editors to provide intelligent code completions as you type. Powered by large language models trained on vast code repositories, Copilot understands context from your current file, open tabs, and comments to suggest relevant code. Beyond simple autocompletion, the chat interface lets you ask questions about your codebase, get debugging help, and generate entire functions from natural language descriptions. For professional developers, Copilot typically saves hours per week on routine coding tasks.",
@@ -343,6 +349,8 @@ export const tools: Tool[] = [
       "Starter plan has restrictive minute and scene limits",
     ],
     websiteUrl: "https://www.synthesia.io",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     bestFor: "L&D teams and businesses creating training, explainer, and marketing videos at scale",
     overview:
       "Synthesia removes the traditional barriers of video production by letting anyone create professional-looking videos with AI-generated presenters. You simply type or paste a script, choose an avatar, and the platform renders a polished video complete with lip-synced speech and natural gestures. The technology is particularly powerful for organizations that need to produce training content, product tutorials, or multilingual marketing videos without the logistics of filming. With custom avatar options and a growing template library, Synthesia has become the go-to platform for scalable video content creation.",
@@ -386,6 +394,8 @@ export const tools: Tool[] = [
       "Some languages are noticeably lower quality than English",
     ],
     websiteUrl: "https://elevenlabs.io",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     bestFor: "Content creators, developers, and publishers needing high-quality AI-generated speech",
     overview:
       "ElevenLabs has set a new standard for AI-generated speech with voices that are often indistinguishable from human recordings. The platform combines state-of-the-art text-to-speech with powerful voice cloning that can replicate a voice from just a few minutes of audio. For content creators, this means producing professional voiceovers without booking talent. For developers, the robust API makes it straightforward to add natural-sounding speech to any application. The Projects feature is particularly well-suited for long-form content like audiobooks, handling pacing, emphasis, and emotion across extended narration.",
@@ -428,6 +438,9 @@ export const tools: Tool[] = [
       "Can be overly prescriptive with creative writing",
     ],
     websiteUrl: "https://www.grammarly.com",
+    affiliateUrl: "https://www.grammarly.com/?utm_source=aiproductivityhub",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Professionals and students who want polished, error-free writing across all platforms",
     overview:
@@ -471,6 +484,9 @@ export const tools: Tool[] = [
       "Some AI features consume credits that run out quickly",
     ],
     websiteUrl: "https://www.canva.com",
+    affiliateUrl: "https://www.canva.com/?utm_source=aiproductivityhub",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Non-designers and small teams who need professional-quality visuals without design expertise",
     overview:
@@ -512,6 +528,8 @@ export const tools: Tool[] = [
       "Costs can scale unexpectedly with high volume",
     ],
     websiteUrl: "https://www.intercom.com/fin",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     bestFor: "SaaS companies and online businesses looking to scale support with AI while keeping quality high",
     overview:
       "Intercom Fin represents a new generation of AI customer support, moving beyond simple chatbots to an agent that genuinely resolves customer issues. Trained on your help center, documentation, and conversation history, Fin provides accurate, contextual answers and can guide customers through multi-step processes. Its pay-per-resolution pricing means you only pay when Fin actually solves a problem, making ROI straightforward to measure. When queries are too complex, Fin hands off seamlessly to human agents with full conversation context, ensuring customers never feel stuck in an unhelpful loop.",
@@ -553,6 +571,8 @@ export const tools: Tool[] = [
       "Pro Search has a daily query limit even on paid plans",
     ],
     websiteUrl: "https://www.perplexity.ai",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Researchers, analysts, and knowledge workers who need fast, reliable answers with sources",
     overview:
@@ -642,6 +662,8 @@ export const tools: Tool[] = [
       "Responses can occasionally be overly verbose or confidently incorrect",
     ],
     websiteUrl: "https://chatgpt.com",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Knowledge workers, researchers, developers, and anyone who wants a capable all-purpose AI assistant",
     overview:
@@ -687,6 +709,8 @@ export const tools: Tool[] = [
       "No free tier — requires a paid subscription to generate images",
     ],
     websiteUrl: "https://www.midjourney.com",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     bestFor: "Creative professionals, designers, and marketers who need world-class AI-generated visuals",
     overview:
       "Midjourney has redefined what is possible with AI-generated imagery, consistently delivering outputs that rival professional illustration and photography in artistic quality. The tool is especially prized for its aesthetic sensibility — images have a distinctive richness and detail that sets Midjourney apart from competing tools. The latest V6 model handles photorealism, stylized art, and abstract concepts with equal competence. While mastering prompting takes time, the payoff is extraordinary creative control. Whether producing concept art for a game, unique visuals for a marketing campaign, or editorial illustrations, Midjourney has become an indispensable tool in the modern designer's workflow.",
@@ -731,6 +755,9 @@ export const tools: Tool[] = [
       "Some integrations are shallower than native integrations",
     ],
     websiteUrl: "https://zapier.com",
+    affiliateUrl: "https://zapier.com/?utm_source=aiproductivityhub",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Small businesses, marketing teams, and operations managers who want to automate workflows without engineering resources",
     overview:
@@ -775,6 +802,8 @@ export const tools: Tool[] = [
       "Summarization quality varies for highly technical or nuanced discussions",
     ],
     websiteUrl: "https://slack.com/features/ai",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     bestFor: "Teams that run on Slack and want to reduce information overload without leaving their primary communication tool",
     overview:
       "Slack AI solves one of the most persistent challenges of modern work: keeping up with the relentless flow of team communication. By embedding AI natively into Slack, the platform lets you get concise summaries of channels, threads, and your personal feed with a single click, turning hours of scrolling into a two-minute briefing. The AI search feature understands intent and context, surfacing relevant conversations even when you cannot remember the exact keywords. For distributed teams across time zones and hybrid workers managing multiple channels, Slack AI transforms the platform from a communication firehose into a structured, searchable knowledge system.",
@@ -818,6 +847,9 @@ export const tools: Tool[] = [
       "Storage costs can add up for teams with heavy recording usage",
     ],
     websiteUrl: "https://www.loom.com",
+    affiliateUrl: "https://www.loom.com/?utm_source=aiproductivityhub",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Remote and hybrid teams who want to reduce meeting load and communicate with context through async video",
     overview:
@@ -863,6 +895,9 @@ export const tools: Tool[] = [
       "Some users find the interface for advanced routing logic complex",
     ],
     websiteUrl: "https://calendly.com",
+    affiliateUrl: "https://calendly.com/?utm_source=aiproductivityhub",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Sales teams, consultants, and any professional who schedules a high volume of external meetings",
     overview:
@@ -908,6 +943,8 @@ export const tools: Tool[] = [
       "Business plan is expensive compared to some alternatives",
     ],
     websiteUrl: "https://otter.ai",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Professionals and teams who need reliable, searchable records of meetings and conversations",
     overview:
@@ -953,6 +990,8 @@ export const tools: Tool[] = [
       "Starter plan limits you to a single seat, which can be restrictive",
     ],
     websiteUrl: "https://www.copy.ai",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Sales and marketing teams that need to produce high volumes of personalized, on-brand content efficiently",
     overview:
@@ -998,6 +1037,8 @@ export const tools: Tool[] = [
       "Steeper learning curve than simpler AI video tools",
     ],
     websiteUrl: "https://runwayml.com",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Creative professionals, filmmakers, and agencies exploring the frontier of AI-powered video production",
     overview:
@@ -1043,6 +1084,9 @@ export const tools: Tool[] = [
       "Interface can feel dated compared to newer support platforms",
     ],
     websiteUrl: "https://www.tidio.com",
+    affiliateUrl: "https://www.tidio.com/?utm_source=aiproductivityhub",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "E-commerce stores and small businesses that want affordable AI-powered customer support with live chat fallback",
     overview:
@@ -1088,6 +1132,8 @@ export const tools: Tool[] = [
       "Fewer third-party integrations compared to ChatGPT's plugin ecosystem",
     ],
     websiteUrl: "https://claude.ai",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Researchers, writers, lawyers, engineers, and analysts who need an AI that handles complex, nuanced tasks with precision",
     overview:
@@ -1132,6 +1178,8 @@ export const tools: Tool[] = [
       "Heavier resource usage compared to a standard VS Code installation",
     ],
     websiteUrl: "https://www.cursor.com",
+    lastReviewedAt: "2026-03-21",
+    reviewStatus: "current" as ReviewStatus,
     isFree: true,
     bestFor: "Software engineers who want the deepest AI integration into their coding workflow with full codebase context",
     overview:
