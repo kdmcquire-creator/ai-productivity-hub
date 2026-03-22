@@ -3,6 +3,17 @@ import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
+function escapeHtml(text: string): string {
+  const map: Record<string, string> = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
 export async function POST(request: Request) {
   // Rate limit contact form submissions
   const rateLimitError = rateLimit(request, {
@@ -57,11 +68,11 @@ export async function POST(request: Request) {
             type: "text/html",
             value: `
               <h2>New Contact Form Submission</h2>
-              <p><strong>Name:</strong> ${name}</p>
-              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+              <p><strong>Email:</strong> ${escapeHtml(email)}</p>
               <hr />
               <p><strong>Message:</strong></p>
-              <p>${message.replace(/\n/g, "<br />")}</p>
+              <p>${escapeHtml(message).replace(/\n/g, "<br />")}</p>
             `,
           },
         ],

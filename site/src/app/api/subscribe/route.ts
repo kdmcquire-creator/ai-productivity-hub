@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { rateLimit } from "@/lib/rate-limit";
-import { isValidEmail } from "@/lib/subscribers";
+import { isValidEmail, sanitizeSource } from "@/lib/subscribers";
 
 export async function POST(request: Request) {
   const rateLimitError = rateLimit(request, {
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     JSON.stringify({
       type: "newsletter_subscribe",
       email,
-      source: source || "unknown",
+      source: sanitizeSource(source),
       subscribedAt: new Date().toISOString(),
     })
   );
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
               {
                 email,
                 custom_fields: {
-                  signup_source: source || "unknown",
+                  signup_source: sanitizeSource(source),
                 },
               },
             ],

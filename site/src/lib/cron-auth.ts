@@ -1,6 +1,22 @@
 import { NextResponse } from "next/server";
 
 /**
+ * Constant-time string comparison to prevent timing attacks.
+ * Returns true if strings are equal, false otherwise.
+ */
+function safeCompare(a: string | undefined | null, b: string): boolean {
+  if (!a) return false;
+  if (a.length !== b.length) return false;
+
+  // XOR-based constant-time comparison
+  let mismatch = 0;
+  for (let i = 0; i < a.length; i++) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
+/**
  * Verify that a cron request is authorized.
  * Checks for CRON_SECRET in the Authorization header (Bearer token).
  * Returns null if authorized, or an error response if not.
@@ -19,7 +35,7 @@ export function verifyCronAuth(request: Request): NextResponse | null {
   const authHeader = request.headers.get("authorization");
   const token = authHeader?.replace("Bearer ", "");
 
-  if (token !== cronSecret) {
+  if (!safeCompare(token, cronSecret)) {
     console.warn("[cron-auth] Unauthorized cron request");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -44,7 +60,7 @@ export function verifyAdminAuth(request: Request): NextResponse | null {
 
   const providedKey = request.headers.get("x-api-key");
 
-  if (providedKey !== adminKey) {
+  if (!safeCompare(providedKey, adminKey)) {
     console.warn("[admin-auth] Unauthorized admin request");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
