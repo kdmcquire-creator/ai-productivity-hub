@@ -19,9 +19,26 @@ export async function generateMetadata({
   const category = categories.find((c) => c.slug === slug);
   if (!category) return {};
 
+  const ogParams = new URLSearchParams({
+    title: `Best AI ${category.name} Tools`,
+    type: "category",
+    subtitle: `Discover and compare the best AI tools for ${category.name.toLowerCase()}.`,
+    category: category.name,
+  });
+
   return {
     title: `Best AI ${category.name} Tools`,
     description: `Discover and compare the best AI tools for ${category.name.toLowerCase()}. In-depth reviews, pricing, and recommendations to help you choose the right ${category.name.toLowerCase()} tool.`,
+    openGraph: {
+      images: [
+        {
+          url: `/api/og?${ogParams.toString()}`,
+          width: 1200,
+          height: 630,
+          alt: `Best AI ${category.name} Tools`,
+        },
+      ],
+    },
   };
 }
 

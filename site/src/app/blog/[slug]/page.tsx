@@ -19,6 +19,12 @@ export async function generateMetadata({
   const post = getBlogPostBySlug(slug);
   if (!post) return {};
 
+  const ogParams = new URLSearchParams({
+    title: post.title,
+    type: "blog",
+    subtitle: post.excerpt,
+  });
+
   return {
     title: post.title,
     description: post.excerpt,
@@ -28,6 +34,14 @@ export async function generateMetadata({
       type: "article",
       publishedTime: post.dateISO,
       authors: [post.author],
+      images: [
+        {
+          url: `/api/og?${ogParams.toString()}`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
     },
   };
 }

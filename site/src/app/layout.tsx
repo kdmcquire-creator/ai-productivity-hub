@@ -23,6 +23,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "AI Productivity Hub",
+    images: [
+      {
+        url: "/api/og?title=AI+Productivity+Hub&type=home",
+        width: 1200,
+        height: 630,
+        alt: "AI Productivity Hub - Find the Best AI Tools for Your Productivity",
+      },
+    ],
   },
   verification: {
     other: {

@@ -19,9 +19,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const tool = tools.find((t) => t.slug === slug);
   if (!tool) return {};
+  const ogParams = new URLSearchParams({
+    title: `${tool.name} Review`,
+    type: "tool",
+    subtitle: tool.tagline,
+    category: tool.category,
+  });
+
   return {
     title: `${tool.name} Review - Features, Pricing & Alternatives`,
     description: tool.description,
+    openGraph: {
+      images: [
+        {
+          url: `/api/og?${ogParams.toString()}`,
+          width: 1200,
+          height: 630,
+          alt: `${tool.name} Review - Features, Pricing & Alternatives`,
+        },
+      ],
+    },
   };
 }
 
