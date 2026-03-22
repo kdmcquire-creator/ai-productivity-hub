@@ -5,6 +5,11 @@ export interface ComparisonRow {
   winner?: "tool1" | "tool2" | "tie";
 }
 
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 export interface Comparison {
   slug: string;
   tool1Slug: string;
@@ -17,6 +22,7 @@ export interface Comparison {
   verdict: string;
   verdictWinner: "tool1" | "tool2" | "tie";
   rows: ComparisonRow[];
+  faqs?: FAQItem[];
 }
 
 export const comparisons: Comparison[] = [
@@ -83,6 +89,20 @@ export const comparisons: Comparison[] = [
         winner: "tool1",
       },
     ],
+    faqs: [
+      {
+        question: "Is Jasper AI better than Grammarly for content creation?",
+        answer: "Jasper AI is better for generating original content from scratch, while Grammarly excels at editing and polishing existing text. They serve different purposes and many content teams use both together.",
+      },
+      {
+        question: "Can I use Jasper AI and Grammarly together?",
+        answer: "Yes, this is a popular workflow. Use Jasper AI to generate drafts and Grammarly to refine grammar, tone, and clarity. They complement each other well.",
+      },
+      {
+        question: "Which is cheaper, Jasper AI or Grammarly?",
+        answer: "Grammarly is significantly cheaper, starting at $12/month with a free tier. Jasper AI starts at $49/month with no free plan. However, Jasper generates content while Grammarly only edits.",
+      },
+    ],
   },
   {
     slug: "chatgpt-vs-claude",
@@ -145,6 +165,20 @@ export const comparisons: Comparison[] = [
         tool1: "Strong guardrails",
         tool2: "Constitutional AI, very honest",
         winner: "tool2",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is ChatGPT or Claude better for writing?",
+        answer: "Claude is generally considered better for long-form writing, nuanced analysis, and following complex instructions. ChatGPT is stronger for creative tasks, image generation, and has a larger plugin ecosystem.",
+      },
+      {
+        question: "Which AI assistant has a better free tier?",
+        answer: "ChatGPT offers a free tier with GPT-4o mini access. Claude also offers a free tier with limited usage of Claude Sonnet. Both are generous for casual use.",
+      },
+      {
+        question: "Can ChatGPT and Claude handle coding tasks?",
+        answer: "Both are excellent at coding. ChatGPT has a built-in Code Interpreter for running Python. Claude excels at reasoning through complex codebases and providing detailed explanations.",
       },
     ],
   },
@@ -211,6 +245,20 @@ export const comparisons: Comparison[] = [
         winner: "tie",
       },
     ],
+    faqs: [
+      {
+        question: "Is Fireflies.ai or Otter.ai better for meeting transcription?",
+        answer: "Fireflies.ai is better for teams that need CRM integration and automated action items. Otter.ai is better for real-time transcription during meetings and individual use.",
+      },
+      {
+        question: "Do Fireflies.ai and Otter.ai work with Zoom?",
+        answer: "Yes, both integrate with Zoom, Google Meet, and Microsoft Teams. Fireflies uses a bot that joins the call, while Otter provides real-time captions during the meeting.",
+      },
+      {
+        question: "Which meeting transcription tool has a better free tier?",
+        answer: "Both offer free tiers. Otter.ai gives 300 minutes per month with real-time transcription. Fireflies.ai offers limited transcriptions with AI summaries on the free plan.",
+      },
+    ],
   },
   {
     slug: "canva-ai-vs-midjourney",
@@ -273,6 +321,20 @@ export const comparisons: Comparison[] = [
         tool1: "Pixel-perfect editing",
         tool2: "Deep prompt & parameter control",
         winner: "tie",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is Canva AI or Midjourney better for beginners?",
+        answer: "Canva AI is much easier for beginners with its drag-and-drop editor and templates. Midjourney requires learning prompt engineering and uses Discord, which has a steeper learning curve.",
+      },
+      {
+        question: "Can Canva AI generate images like Midjourney?",
+        answer: "Canva has AI image generation (Magic Media), but Midjourney produces significantly higher quality artistic images. Canva is better for practical design work like presentations and social posts.",
+      },
+      {
+        question: "Which is cheaper for AI design, Canva or Midjourney?",
+        answer: "Canva offers a free tier with limited AI features and Pro at $13/month. Midjourney has no free tier and starts at $10/month for basic access. Canva provides more overall design value for the price.",
       },
     ],
   },

@@ -6,6 +6,7 @@ import AdUnit from "@/components/AdUnit";
 import AffiliateBlock from "@/components/AffiliateBlock";
 import { ToolJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import RelatedTools from "@/components/RelatedTools";
+import RelatedBlogPosts from "@/components/RelatedBlogPosts";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -336,6 +337,12 @@ export default async function ToolPage({ params }: PageProps) {
           currentSlug={tool.slug}
           category={tool.category}
           allTools={tools}
+        />
+
+        {/* Related Blog Posts */}
+        <RelatedBlogPosts
+          toolSlug={tool.slug}
+          toolCategory={tool.category}
         />
       </div>
     </article>

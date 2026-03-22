@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { comparisons, getComparisonBySlug } from "@/lib/comparisons";
-import { ComparisonJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
+import { ComparisonJsonLd, BreadcrumbJsonLd, FAQJsonLd } from "@/components/JsonLd";
 
 const BASE_URL = "https://aiproductivityhub.co";
 
@@ -86,6 +86,7 @@ export default async function ComparisonPage({ params }: PageProps) {
   return (
     <>
       <ComparisonJsonLd comparison={comparison} />
+      {comparison.faqs && <FAQJsonLd faqs={comparison.faqs} />}
       <BreadcrumbJsonLd
         items={[
           { name: "Home", url: BASE_URL },
@@ -328,6 +329,30 @@ export default async function ComparisonPage({ params }: PageProps) {
               </div>
             </div>
           </section>
+
+          {/* FAQ Section */}
+          {comparison.faqs && comparison.faqs.length > 0 && (
+            <section>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Frequently Asked Questions
+              </h2>
+              <div className="space-y-4">
+                {comparison.faqs.map((faq, i) => (
+                  <div
+                    key={i}
+                    className="bg-white rounded-2xl border border-gray-200 p-6"
+                  >
+                    <h3 className="font-bold text-gray-900 mb-2">
+                      {faq.question}
+                    </h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Related Comparisons */}
           {relatedComparisons.length > 0 && (

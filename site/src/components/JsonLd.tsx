@@ -1,6 +1,6 @@
 import type { Tool } from "@/lib/tools";
 import type { BlogPost } from "@/lib/blog";
-import type { Comparison } from "@/lib/comparisons";
+import type { Comparison, FAQItem } from "@/lib/comparisons";
 
 const BASE_URL = "https://aiproductivityhub.co";
 
@@ -150,6 +150,27 @@ export function ComparisonJsonLd({ comparison }: { comparison: Comparison }) {
           "@type": "WebPage",
           "@id": `${BASE_URL}/compare/${comparison.slug}/`,
         },
+      }}
+    />
+  );
+}
+
+// FAQ schema for comparison pages (rich snippets in Google)
+export function FAQJsonLd({ faqs }: { faqs: FAQItem[] }) {
+  if (faqs.length === 0) return null;
+  return (
+    <JsonLdScript
+      data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map((faq) => ({
+          "@type": "Question",
+          name: faq.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: faq.answer,
+          },
+        })),
       }}
     />
   );
