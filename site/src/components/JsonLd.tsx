@@ -1,5 +1,6 @@
 import type { Tool } from "@/lib/tools";
 import type { BlogPost } from "@/lib/blog";
+import type { Comparison } from "@/lib/comparisons";
 
 const BASE_URL = "https://aiproductivityhub.co";
 
@@ -124,6 +125,30 @@ export function ArticleJsonLd({ post }: { post: BlogPost }) {
         mainEntityOfPage: {
           "@type": "WebPage",
           "@id": `${BASE_URL}/blog/${post.slug}/`,
+        },
+      }}
+    />
+  );
+}
+
+// Article schema for comparison pages
+export function ComparisonJsonLd({ comparison }: { comparison: Comparison }) {
+  return (
+    <JsonLdScript
+      data={{
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: comparison.title,
+        description: comparison.excerpt,
+        datePublished: comparison.dateISO,
+        publisher: {
+          "@type": "Organization",
+          name: "AI Productivity Hub",
+          url: BASE_URL,
+        },
+        mainEntityOfPage: {
+          "@type": "WebPage",
+          "@id": `${BASE_URL}/compare/${comparison.slug}/`,
         },
       }}
     />

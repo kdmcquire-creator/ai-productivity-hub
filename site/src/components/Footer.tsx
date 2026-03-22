@@ -3,6 +3,7 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 
 const footerLinks = [
   { href: "/about/", label: "About" },
+  { href: "/compare/", label: "Compare" },
   { href: "/privacy/", label: "Privacy" },
   { href: "/contact/", label: "Contact" },
   { href: "/terms/", label: "Terms" },

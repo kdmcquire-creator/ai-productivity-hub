@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { BlogPost, BlogSection } from "@/lib/blog";
 import { tools } from "@/lib/tools";
 import { getAuthorBySlug } from "@/lib/authors";
+import AdUnit from "@/components/AdUnit";
 
 const calloutColors = {
   green: "bg-green-50 border-green-200 border-l-green-500",
@@ -127,6 +128,10 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
             <SectionBlock section={section} />
             {i === 0 && post.sections.length > 1 && (
               <hr className="my-12 border-gray-200" />
+            )}
+            {/* Mid-article ad after 2nd section */}
+            {i === 1 && (
+              <AdUnit slot="SLOT_BLOG_MID" format="horizontal" className="my-8" />
             )}
           </div>
         ))}

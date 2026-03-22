@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { tools } from "@/lib/tools";
 import { blogPosts } from "@/lib/blog";
 import { authors } from "@/lib/authors";
+import { comparisons } from "@/lib/comparisons";
 
 const BASE_URL = "https://aiproductivityhub.co";
 
@@ -21,6 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${BASE_URL}/blog/`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/compare/`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.9,
@@ -86,5 +93,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.4,
   }));
 
-  return [...staticPages, ...toolPages, ...blogPages, ...authorPages];
+  const comparisonPages: MetadataRoute.Sitemap = comparisons.map(
+    (comparison) => ({
+      url: `${BASE_URL}/compare/${comparison.slug}/`,
+      lastModified: new Date(comparison.dateISO),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })
+  );
+
+  return [
+    ...staticPages,
+    ...toolPages,
+    ...blogPages,
+    ...authorPages,
+    ...comparisonPages,
+  ];
 }
