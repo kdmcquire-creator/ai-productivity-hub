@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { headers } from "next/headers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
@@ -40,14 +41,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+const SITE_URL = "https://aiproductivityhub.co";
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Read the pathname stamped by middleware so we can build an accurate
+  // canonical URL without a client-side hook.
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") ?? "/";
+  // next.config.js has trailingSlash: true — ensure the canonical always ends
+  // with "/" (the pathname from middleware already does for page routes).
+  const canonicalUrl = `${SITE_URL}${pathname.endsWith("/") ? pathname : `${pathname}/`}`;
+
   return (
     <html lang="en">
       <head>
+        <link rel="canonical" href={canonicalUrl} />
         {/* Google Tag Manager */}
         {GTM_ID && (
           <Script id="gtm-head" strategy="afterInteractive">

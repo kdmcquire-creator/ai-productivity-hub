@@ -7,13 +7,13 @@ export interface FeedSource {
 
 export const feedSources: FeedSource[] = [
   {
-    name: "Product Hunt AI",
-    url: "https://www.producthunt.com/categories/artificial-intelligence/rss",
+    name: "Product Hunt",
+    url: "https://www.producthunt.com/feed",
     category: "launches",
   },
   {
-    name: "The Verge AI",
-    url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
+    name: "VentureBeat AI",
+    url: "https://venturebeat.com/category/ai/feed/",
     category: "news",
   },
   {

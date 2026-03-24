@@ -33,6 +33,9 @@ const nextConfig = {
       // /terms-and-conditions -> /terms (canonical)
       { source: "/terms-and-conditions/", destination: "/terms/", permanent: true },
       { source: "/terms-and-conditions-2/", destination: "/terms/", permanent: true },
+      // /comparisons -> /compare (canonical)
+      { source: "/comparisons/", destination: "/compare/", permanent: true },
+      { source: "/comparisons/:slug/", destination: "/compare/:slug/", permanent: true },
     ];
   },
 };

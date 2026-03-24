@@ -1742,52 +1742,6 @@ export const tools: Tool[] = [
       "Podcastle brings together every stage of the podcast production process into a single browser-based platform designed for creators who do not want to juggle multiple tools. The recording interface handles remote guests cleanly, the Magic Dust enhancement makes even home recordings sound professional, and the Revoice voice cloning feature is a genuine differentiator — allowing creators to generate audio inserts in their own voice from typed text without firing up a microphone. For podcasters who want capable AI tools at an affordable price point without needing a dedicated audio engineering background, Podcastle is one of the most accessible and complete solutions available.",
   },
   {
-    slug: "tome-ai",
-    name: "Tome AI",
-    description:
-      "Tome is an AI-native presentation and storytelling tool that generates complete, well-designed slide decks from text prompts, helping professionals create compelling narratives for pitches, reports, and briefings in minutes.",
-    category: "Design",
-    features: [
-      "Full presentation generation from a single text prompt",
-      "AI-powered page layout and visual design suggestions",
-      "Live data embeds from Figma, Looker, Miro, and more",
-      "AI-assisted outline and narrative structure generation",
-      "One-click theme and color palette generation",
-      "Presenter view with speaker notes and analytics",
-    ],
-    color: "from-rose-500 to-pink-700",
-    tagline: "AI-generated presentations that tell your story",
-    pricing: [
-      { tier: "Free", price: "$0", note: "Unlimited tomes, basic AI features, Tome branding" },
-      { tier: "Pro", price: "$16/mo", note: "Advanced AI, custom fonts, analytics, remove branding" },
-      { tier: "Enterprise", price: "Custom", note: "SSO, advanced permissions, custom AI models, priority support" },
-    ],
-    useCases: [
-      "Creating investor pitch decks and business proposals quickly",
-      "Generating internal reports and briefings with structured AI narratives",
-      "Producing sales presentations with AI-tailored content for each prospect",
-      "Building visual storytelling documents that go beyond traditional slide formats",
-    ],
-    pros: [
-      "Speed of generation is exceptional — full decks in under a minute from a prompt",
-      "AI narrative structure produces more coherent stories than template-based tools",
-      "Live embeds allow dynamic data to update presentations automatically",
-      "Clean, modern aesthetic out of the box without manual design work",
-    ],
-    cons: [
-      "Less layout control than PowerPoint or Google Slides for custom designs",
-      "Not ideal for highly complex data-heavy presentations requiring fine formatting",
-      "Some users find the format limiting for traditional slide-by-slide presentations",
-    ],
-    websiteUrl: "https://tome.app",
-    isFree: true,
-    lastReviewedAt: "2026-03-21",
-    reviewStatus: "current" as ReviewStatus,
-    bestFor: "Founders, consultants, and executives who need to create compelling, well-designed presentations quickly from scratch",
-    overview:
-      "Tome reimagines the presentation format for an AI-native world, moving beyond slides to dynamic storytelling canvases that can be generated from a prompt in under a minute. Unlike traditional tools where you start from a blank slide and labor over layout, Tome's AI drafts both the content structure and visual design simultaneously, producing a polished starting point that you refine rather than build from scratch. The live embed system allows presentations to pull in real-time data from tools like Figma, Looker, and Airtable, making Tome particularly powerful for recurring business reviews where the content updates but the structure stays the same. For professionals who need to communicate ideas compellingly without spending hours in PowerPoint, Tome delivers an AI-native alternative that is both faster and often more visually effective.",
-  },
-  {
     slug: "beautiful-ai",
     name: "Beautiful.ai",
     description:
