@@ -36,6 +36,13 @@ const nextConfig = {
       // /comparisons -> /compare (canonical)
       { source: "/comparisons/", destination: "/compare/", permanent: true },
       { source: "/comparisons/:slug/", destination: "/compare/:slug/", permanent: true },
+      // Old blog post slugs that Google crawled but no longer exist
+      // Redirect to closest matching content to preserve link equity
+      { source: "/blog/grammarly-vs-chatgpt-email-replies/", destination: "/blog/grammarly-vs-jasper-vs-copy-ai/", permanent: true },
+      { source: "/blog/email-follow-up-templates-ai/", destination: "/blog/ai-write-better-emails-half-the-time/", permanent: true },
+      { source: "/blog/jasper-ai-review/", destination: "/blog/jasper-ai-vs-copy-ai-vs-grammarly-writing-tools/", permanent: true },
+      { source: "/blog/gmail-ai-triage/", destination: "/blog/ai-write-better-emails-half-the-time/", permanent: true },
+      { source: "/blog/instantly-ai-review/", destination: "/blog/", permanent: true },
     ];
   },
 };
