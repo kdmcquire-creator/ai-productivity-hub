@@ -3,6 +3,7 @@ import { tools } from "@/lib/tools";
 import { blogPosts } from "@/lib/blog";
 import { authors } from "@/lib/authors";
 import { comparisons } from "@/lib/comparisons";
+import { calculators } from "@/lib/calculators";
 
 const BASE_URL = "https://aiproductivityhub.co";
 
@@ -102,11 +103,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
+  const calculatorPages: MetadataRoute.Sitemap = [
+    {
+      url: `${BASE_URL}/tools/calculators/`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    },
+    ...calculators.map((calc) => ({
+      url: `${BASE_URL}/tools/calculators/${calc.slug}/`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+  ];
+
   return [
     ...staticPages,
     ...toolPages,
     ...blogPages,
     ...authorPages,
     ...comparisonPages,
+    ...calculatorPages,
   ];
 }
