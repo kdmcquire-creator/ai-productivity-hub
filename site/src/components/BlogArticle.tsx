@@ -4,6 +4,7 @@ import { tools } from "@/lib/tools";
 import { getAuthorBySlug } from "@/lib/authors";
 import AdUnit from "@/components/AdUnit";
 import SiteGroundBanner from "@/components/SiteGroundBanner";
+import SiteGroundLeaderboard from "@/components/SiteGroundLeaderboard";
 
 const calloutColors = {
   green: "bg-green-50 border-green-200 border-l-green-500",
@@ -122,6 +123,9 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
           </Link>
           .
         </p>
+
+        {/* Leaderboard above article sections */}
+        <SiteGroundLeaderboard />
 
         {/* Content Sections */}
         {post.sections.map((section, i) => (

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { tools, categories } from "@/lib/tools";
 import AdUnit from "@/components/AdUnit";
 import AffiliateBlock from "@/components/AffiliateBlock";
+import SiteGroundHalfPage from "@/components/SiteGroundHalfPage";
 import { ToolJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import RelatedTools from "@/components/RelatedTools";
 import RelatedBlogPosts from "@/components/RelatedBlogPosts";
@@ -331,6 +332,9 @@ export default async function ToolPage({ params }: PageProps) {
 
         {/* Affiliate Block */}
         <AffiliateBlock placement="toolPage" />
+
+        {/* Half-page banner */}
+        <SiteGroundHalfPage />
 
         {/* Related Tools */}
         <RelatedTools
