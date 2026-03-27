@@ -8,6 +8,9 @@ const staticAffiliateLinks: Record<string, string> = {
   cloudways: "https://www.cloudways.com/en/?id=2102009",
   bluehost: "https://bluehost.sjv.io/c/7045929/1376228/11352",
   amazon: "https://www.amazon.com/?tag=aiphubsite-20",
+  cybersuite: "https://www.awin1.com/cread.php?awinmid=67878&awinaffid=2805304&ued=https%3A%2F%2Fcybersuite.com%2Fdemo-signup%2F",
+  viralcanvas: "https://www.awin1.com/cread.php?awinmid=124372&awinaffid=2805304&ued=https%3A%2F%2Fwww.viralcanvas.ai%2F",
+  resso: "https://www.awin1.com/cread.php?awinmid=85741&awinaffid=2805304&ued=https%3A%2F%2Fwww.resso.ai%2Fsignup",
 };
 
 function resolveDestination(slug: string): string | undefined {
