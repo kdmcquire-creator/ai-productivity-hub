@@ -39,6 +39,17 @@ export default function Footer() {
           may earn affiliate commissions from links on this site. All product
           names, logos, and trademarks are property of their respective owners.
         </p>
+        <p className="text-xs text-gray-400 text-center mb-3">
+          <a
+            href="/go/amazon/"
+            target="_blank"
+            rel="nofollow noopener sponsored"
+            className="hover:text-blue-600 transition"
+          >
+            🛒 Amazon Associate
+          </a>
+          {" "}· As an Amazon Associate I earn from qualifying purchases.
+        </p>
         <p className="text-xs text-gray-400 text-center">
           &copy; {new Date().getFullYear()} AI Productivity Hub. All rights
           reserved.

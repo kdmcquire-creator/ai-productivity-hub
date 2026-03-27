@@ -7,7 +7,7 @@ const staticAffiliateLinks: Record<string, string> = {
   freshbooks: "https://freshbooks.pxf.io/c/1234567/1064077/13524",
   cloudways: "https://www.cloudways.com/en/?id=2102009",
   bluehost: "https://bluehost.sjv.io/c/7045929/1376228/11352",
-  amazon: "https://amzn.to/4bzyqmW",
+  amazon: "https://www.amazon.com/?tag=aiphubsite-20",
 };
 
 function resolveDestination(slug: string): string | undefined {
