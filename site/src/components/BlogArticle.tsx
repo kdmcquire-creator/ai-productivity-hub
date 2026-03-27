@@ -3,6 +3,7 @@ import type { BlogPost, BlogSection } from "@/lib/blog";
 import { tools } from "@/lib/tools";
 import { getAuthorBySlug } from "@/lib/authors";
 import AdUnit from "@/components/AdUnit";
+import SiteGroundBanner from "@/components/SiteGroundBanner";
 
 const calloutColors = {
   green: "bg-green-50 border-green-200 border-l-green-500",
@@ -181,6 +182,9 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
             </div>
           </section>
         )}
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <SiteGroundBanner />
+        </div>
       </div>
     </article>
   );
