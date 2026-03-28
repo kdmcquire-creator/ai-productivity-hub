@@ -6,7 +6,7 @@ import { logAffiliateClick } from "@/lib/analytics";
 const staticAffiliateLinks: Record<string, string> = {
   freshbooks: "https://freshbooks.pxf.io/c/1234567/1064077/13524",
   cloudways: "https://www.cloudways.com/en/?id=2102009",
-  bluehost: "https://bluehost.sjv.io/c/7045929/1376228/11352",
+  bluehost: "https://bluehost.sjv.io/NG93NP",
   amazon: "https://www.amazon.com/?tag=aiphubsite-20",
   cybersuite: "https://www.awin1.com/cread.php?awinmid=67878&awinaffid=2805304&ued=https%3A%2F%2Fcybersuite.com%2Fdemo-signup%2F",
   viralcanvas: "https://www.awin1.com/cread.php?awinmid=124372&awinaffid=2805304&ued=https%3A%2F%2Fwww.viralcanvas.ai%2F",
