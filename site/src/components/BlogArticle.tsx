@@ -5,6 +5,7 @@ import { getAuthorBySlug } from "@/lib/authors";
 import AdUnit from "@/components/AdUnit";
 import SiteGroundBanner from "@/components/SiteGroundBanner";
 import SiteGroundLeaderboard from "@/components/SiteGroundLeaderboard";
+import { NordVPNLeaderboard } from "@/components/NordVPNLeaderboard";
 
 const calloutColors = {
   green: "bg-green-50 border-green-200 border-l-green-500",
@@ -148,6 +149,9 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
             <SectionBlock section={post.verdict} />
           </>
         )}
+
+        {/* Post-article sponsor banner */}
+        <NordVPNLeaderboard />
 
         {/* Tools Mentioned */}
         {mentionedTools.length > 0 && (
