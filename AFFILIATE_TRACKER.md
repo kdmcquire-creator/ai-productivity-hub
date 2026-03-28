@@ -42,7 +42,7 @@
 | **ViralCanvas.ai** | Awin (`awinmid=124372`) | `awinaffid=2805304` | — | — | PH |
 | **Resso.ai** | Awin (`awinmid=85741`) | `awinaffid=2805304` | — | — | PH |
 | **Cloudways** | Direct | `id=2102009` | $30+7% recurring or up to $125/sale | 90 days | FH |
-| **Bluehost** | CJ / Impact | `c/7045929/1376228/11352` | $65/sale | 90 days | PH, FH |
+| **Bluehost** | Impact.com | `sjv.io/NG93NP` | $65/sale | 90 days | PH, FH |
 
 ---
 
