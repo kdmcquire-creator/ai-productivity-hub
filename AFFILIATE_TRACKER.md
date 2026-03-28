@@ -50,7 +50,7 @@
 
 | Program | Sites | Issue | Fix Needed |
 |---------|-------|-------|------------|
-| **FreshBooks** | PH, FH | Publisher ID is `1234567` (placeholder) — clicks earn nothing | Log into FreshBooks affiliate portal → copy real publisher ID → update `go/[slug]/route.ts` on both PH and FH |
+| **FreshBooks** | PH, FH | ⏳ Application pending approval — placeholder ID `1234567` in place. Clicks tracked but earning nothing until approved. | Send real publisher ID once approved → update `go/[slug]/route.ts` on both PH and FH (one-liner swap) |
 | **Semrush** | CE | Link uses `?ref=clarityengine` — not a real affiliate link, earns nothing | Apply at semrush.com/lp/affiliate-program/ (requires ~1,500 mo. visitors) → replace with real BeRush link |
 | **Surfer SEO** | CE | Link uses `?via=clarityengine` — not a real affiliate link | Apply at surferseo.com/affiliate-program/ → replace with real partner link |
 | **Moz** | CE | Link uses `?ref=clarityengine` — not tracked | Check Moz partner program status → update or remove |
@@ -175,7 +175,7 @@ Click-through goes to `/go/amazon` → site-specific tracking tag.
 
 ### 🔴 Urgent — Revenue Leakage
 
-- [ ] **Fix FreshBooks placeholder ID** — `1234567` earns nothing. Log into FreshBooks affiliate portal, copy real publisher ID, update in PH (`site/src/app/go/[slug]/route.ts`) and FH (`site/src/app/go/[slug]/route.ts`).
+- [ ] **FreshBooks — awaiting approval** — Application submitted, pending. Placeholder `1234567` is live. Once approved: send publisher ID → update both PH + FH `go/[slug]/route.ts` in one shot.
 - [ ] **Fix CE SEO tool links** — Semrush, Surfer, Moz, Mangools all use fake `?ref=` params. Apply for real programs and replace with tracked links.
 - [ ] **Remove Ahrefs link from CE** — Ahrefs has no public affiliate program. Replace with Semrush as the alternative recommendation.
 
