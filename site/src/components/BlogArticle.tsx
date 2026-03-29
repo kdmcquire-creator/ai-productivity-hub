@@ -6,6 +6,7 @@ import AdUnit from "@/components/AdUnit";
 import SiteGroundBanner from "@/components/SiteGroundBanner";
 import SiteGroundLeaderboard from "@/components/SiteGroundLeaderboard";
 import { NordVPNLeaderboard } from "@/components/NordVPNLeaderboard";
+import SidebarAmazon from "@/components/SidebarAmazon";
 
 const calloutColors = {
   green: "bg-green-50 border-green-200 border-l-green-500",
@@ -111,87 +112,100 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
       </header>
 
       {/* Article Body */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Affiliate Disclosure — subtle inline note */}
-        <p className="text-xs text-gray-400 mb-10 italic">
-          Disclosure: This post may contain affiliate links. We may earn a
-          commission at no extra cost to you.{" "}
-          <Link
-            href="/affiliate-disclosure/"
-            className="text-blue-500 hover:underline"
-          >
-            Learn more
-          </Link>
-          .
-        </p>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="lg:grid lg:grid-cols-3 lg:gap-10">
 
-        {/* Leaderboard above article sections */}
-        <SiteGroundLeaderboard />
+          {/* Main content — 2 cols */}
+          <div className="lg:col-span-2">
+            {/* Affiliate Disclosure — subtle inline note */}
+            <p className="text-xs text-gray-400 mb-10 italic">
+              Disclosure: This post may contain affiliate links. We may earn a
+              commission at no extra cost to you.{" "}
+              <Link
+                href="/affiliate-disclosure/"
+                className="text-blue-500 hover:underline"
+              >
+                Learn more
+              </Link>
+              .
+            </p>
 
-        {/* Content Sections */}
-        {post.sections.map((section, i) => (
-          <div key={i}>
-            <SectionBlock section={section} />
-            {i === 0 && post.sections.length > 1 && (
-              <hr className="my-12 border-gray-200" />
+            {/* Leaderboard above article sections */}
+            <SiteGroundLeaderboard />
+
+            {/* Content Sections */}
+            {post.sections.map((section, i) => (
+              <div key={i}>
+                <SectionBlock section={section} />
+                {i === 0 && post.sections.length > 1 && (
+                  <hr className="my-12 border-gray-200" />
+                )}
+                {/* Mid-article ad after 2nd section */}
+                {i === 1 && (
+                  <AdUnit slot="SLOT_BLOG_MID" format="horizontal" className="my-8" />
+                )}
+              </div>
+            ))}
+
+            {/* Verdict */}
+            {post.verdict && (
+              <>
+                <hr className="my-12 border-gray-200" />
+                <SectionBlock section={post.verdict} />
+              </>
             )}
-            {/* Mid-article ad after 2nd section */}
-            {i === 1 && (
-              <AdUnit slot="SLOT_BLOG_MID" format="horizontal" className="my-8" />
+
+            {/* Post-article sponsor banner */}
+            <NordVPNLeaderboard />
+
+            {/* Tools Mentioned */}
+            {mentionedTools.length > 0 && (
+              <section className="mt-16 pt-10 border-t border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  Tools Mentioned in This Article
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {mentionedTools.map((tool) => (
+                    <Link
+                      key={tool.slug}
+                      href={`/tools/${tool.slug}/`}
+                      className="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-blue-200 transition-all"
+                    >
+                      <div
+                        className={`h-1.5 bg-gradient-to-r ${tool.color || "from-blue-500 to-indigo-600"}`}
+                      />
+                      <div className="p-5">
+                        <h3 className="font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition">
+                          {tool.name}
+                        </h3>
+                        <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed mb-3">
+                          {tool.tagline}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full">
+                            {tool.category}
+                          </span>
+                          <span className="text-xs text-gray-400">
+                            {tool.isFree ? "Free tier" : tool.pricing[0]?.price}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
             )}
+
+            <SiteGroundBanner />
           </div>
-        ))}
 
-        {/* Verdict */}
-        {post.verdict && (
-          <>
-            <hr className="my-12 border-gray-200" />
-            <SectionBlock section={post.verdict} />
-          </>
-        )}
-
-        {/* Post-article sponsor banner */}
-        <NordVPNLeaderboard />
-
-        {/* Tools Mentioned */}
-        {mentionedTools.length > 0 && (
-          <section className="mt-16 pt-10 border-t border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Tools Mentioned in This Article
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {mentionedTools.map((tool) => (
-                <Link
-                  key={tool.slug}
-                  href={`/tools/${tool.slug}/`}
-                  className="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg hover:border-blue-200 transition-all"
-                >
-                  <div
-                    className={`h-1.5 bg-gradient-to-r ${tool.color || "from-blue-500 to-indigo-600"}`}
-                  />
-                  <div className="p-5">
-                    <h3 className="font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition">
-                      {tool.name}
-                    </h3>
-                    <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed mb-3">
-                      {tool.tagline}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full">
-                        {tool.category}
-                      </span>
-                      <span className="text-xs text-gray-400">
-                        {tool.isFree ? "Free tier" : tool.pricing[0]?.price}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+          {/* Sidebar — 1 col, sticky */}
+          <aside className="mt-12 lg:mt-0">
+            <div className="sticky top-6 space-y-6">
+              <SidebarAmazon />
             </div>
-          </section>
-        )}
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <SiteGroundBanner />
+          </aside>
+
         </div>
       </div>
     </article>
