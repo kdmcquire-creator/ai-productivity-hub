@@ -34,6 +34,18 @@ export default function Footer() {
             </Link>
           ))}
         </div>
+        {/* Network links */}
+        <div className="border-t border-gray-200 pt-6 mb-6">
+          <p className="text-xs text-gray-400 text-center uppercase tracking-wider mb-3 font-medium">
+            More AI Resources
+          </p>
+          <div className="flex flex-wrap justify-center gap-5">
+            <a href="https://aifinancehub.ai" target="_blank" rel="noopener" className="text-sm text-gray-500 hover:text-blue-600 transition">AI Finance Hub</a>
+            <a href="https://clarity-engine.ai" target="_blank" rel="noopener" className="text-sm text-gray-500 hover:text-blue-600 transition">Free SEO Tools</a>
+            <a href="https://legaltech-ai-hub.com" target="_blank" rel="noopener" className="text-sm text-gray-500 hover:text-blue-600 transition">Legal AI Hub</a>
+          </div>
+        </div>
+
         <p className="text-xs text-gray-500 text-center max-w-3xl mx-auto mb-4">
           AI Productivity Hub provides informational content and reviews only. We
           may earn affiliate commissions from links on this site. All product
