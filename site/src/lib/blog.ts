@@ -26,6 +26,267 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meeting-notes-template-ai",
+    title: "10 AI Meeting Notes Templates That Actually Save Time (Free)",
+    excerpt:
+      "Stop writing meeting notes from scratch. These AI meeting notes templates work with tools like Otter.ai, Fireflies, and Notion AI to auto-capture action items, decisions, and summaries in seconds.",
+    date: "March 15, 2026",
+    dateISO: "2026-03-15",
+    author: "Research Team",
+    authorSlug: "research-team",
+    readTime: "7 min read",
+    category: "Templates",
+    color: "from-blue-500 to-indigo-600",
+    toolSlugs: ["otter-ai", "fireflies-ai", "notion-ai"],
+    sections: [
+      {
+        heading: "Why AI Meeting Notes Templates Work",
+        body: "A good meeting notes template does two things: it gives your AI tool a consistent structure to fill in, and it ensures nothing important gets missed. When you pair a template with an AI meeting assistant like Otter.ai or Fireflies, the AI auto-populates the sections — attendees, key decisions, action items — while you stay present in the conversation. The result is a complete, structured record generated in real time, not a rushed summary written afterward.",
+        listItems: [
+          "AI tools need structure to produce structured output — templates provide the scaffold",
+          "Consistent format makes past meetings searchable and comparable over time",
+          "Action items captured during the meeting get assigned and followed up, not forgotten",
+          "Templates reduce the cognitive load of note-taking so you can focus on the discussion",
+        ],
+      },
+      {
+        heading: "Template 1: Standard Meeting Notes",
+        headingColor: "text-blue-700",
+        body: "The baseline template every team should have. Works with any AI meeting tool.",
+        orderedList: [
+          "Meeting Title & Date",
+          "Attendees (auto-filled by AI)",
+          "Agenda Items Discussed",
+          "Key Decisions Made",
+          "Action Items (owner + due date)",
+          "Next Meeting Date",
+        ],
+      },
+      {
+        heading: "Template 2: One-on-One Check-In",
+        headingColor: "text-blue-700",
+        body: "For weekly manager/IC meetings. Fireflies and Otter both handle these well with their speaker-identification features.",
+        orderedList: [
+          "Wins since last meeting",
+          "Blockers and challenges",
+          "Priorities for the week ahead",
+          "Career / development notes",
+          "Follow-up items",
+        ],
+      },
+      {
+        heading: "Template 3: Project Status Update",
+        headingColor: "text-blue-700",
+        body: "Keep stakeholders aligned on complex projects. Notion AI can pull this into a project page automatically when integrated with your meeting tool.",
+        orderedList: [
+          "Project name and phase",
+          "Progress since last update",
+          "Risks and dependencies",
+          "Decisions needed from stakeholders",
+          "Action items with owners and deadlines",
+          "Next milestone date",
+        ],
+      },
+      {
+        heading: "Template 4: Client Call Notes",
+        headingColor: "text-blue-700",
+        body: "For sales and account management. Pairs well with CRM integrations that Fireflies and Otter both support.",
+        orderedList: [
+          "Client name and participants",
+          "Meeting purpose / agenda",
+          "Client feedback and concerns raised",
+          "Commitments made (by you and by client)",
+          "Next steps with dates",
+          "Internal follow-up notes",
+        ],
+      },
+      {
+        heading: "Best AI Tools for These Templates",
+        body: "The right AI meeting tool depends on your stack. Otter.ai is best for live transcription with real-time summaries — ideal if you're in back-to-back meetings. Fireflies excels at CRM and project tool integrations, automatically pushing notes to Salesforce, HubSpot, or Notion. Notion AI works best if your team already lives in Notion and wants meeting notes to appear directly in project pages.",
+        listItems: [
+          "Otter.ai: Best live transcription, real-time AI summary, free tier available",
+          "Fireflies.ai: Best integrations (50+ apps), strong search across all past meetings",
+          "Notion AI: Best if your workflow is already Notion-centric",
+          "Fathom: Best for individual users — free unlimited recordings",
+        ],
+      },
+      {
+        heading: "How to Set Up AI Meeting Notes in 5 Minutes",
+        body: "Getting AI meeting notes running is faster than most people expect. Most tools integrate directly with Google Meet, Zoom, and Teams — no separate setup required per meeting.",
+        orderedList: [
+          "Sign up for Otter.ai or Fireflies (both have free tiers)",
+          "Connect your Google or Microsoft calendar",
+          "Enable auto-join for scheduled meetings",
+          "Paste your preferred template into the AI's custom notes format",
+          "Your next meeting auto-generates structured notes based on the template",
+        ],
+      },
+    ],
+    verdict: {
+      heading: "Bottom Line",
+      body: "The best meeting notes template is the one your team will actually use consistently. Start with the Standard template, run it for two weeks with your AI tool of choice, then customize based on what your team needs most. The AI does the heavy lifting — your template just makes sure it captures the right things.",
+    },
+  },
+  {
+    slug: "email-follow-up-templates-ai",
+    title: "7 AI Email Follow-Up Templates That Get Replies (Copy-Paste Ready)",
+    excerpt:
+      "AI-generated email follow-up templates for sales, networking, and job applications. Use these with ChatGPT, Grammarly, or any AI writing tool to write follow-ups that sound human and get responses.",
+    date: "March 10, 2026",
+    dateISO: "2026-03-10",
+    author: "Research Team",
+    authorSlug: "research-team",
+    readTime: "6 min read",
+    category: "Templates",
+    color: "from-green-500 to-teal-600",
+    toolSlugs: ["chatgpt", "grammarly", "jasper-ai"],
+    sections: [
+      {
+        heading: "Why AI Follow-Up Templates Beat Writing From Scratch",
+        body: "The problem with follow-up emails isn't knowing you should send them — it's the blank page. AI writing tools like ChatGPT and Grammarly can generate a solid follow-up in seconds, but only if you give them the right prompt structure. These templates are designed as AI prompts: paste them into ChatGPT (or any AI tool), fill in the brackets, and get a ready-to-send email in under a minute.",
+        listItems: [
+          "Blank page problem eliminated — start from a proven structure every time",
+          "AI personalizes the template based on your context with minimal input",
+          "Consistent tone and professionalism across all your outreach",
+          "Speed: go from zero to sent in under 2 minutes per email",
+        ],
+      },
+      {
+        heading: "Template 1: Post-Sales Meeting Follow-Up",
+        headingColor: "text-green-700",
+        body: "Use this after a discovery call or product demo. Works well as a ChatGPT prompt.",
+        orderedList: [
+          "Subject: Following up from [meeting topic] — [your company]",
+          "Opening: Reference one specific thing discussed (a challenge they mentioned)",
+          "Value bridge: Connect that challenge to a specific feature/benefit",
+          "Clear next step: Propose one specific action (trial, intro call, proposal)",
+          "Low-pressure close: Make it easy to say yes or reschedule",
+        ],
+      },
+      {
+        heading: "Template 2: Networking Follow-Up After Event",
+        headingColor: "text-green-700",
+        body: "For following up with people you met at conferences or online events.",
+        orderedList: [
+          "Subject: Great meeting you at [event name]",
+          "Memory anchor: Reference the specific conversation topic",
+          "Value add: Share an article, resource, or intro that's relevant to what they mentioned",
+          "Soft ask: Suggest a 20-minute call to continue the conversation",
+          "No pressure sign-off",
+        ],
+      },
+      {
+        heading: "Template 3: Job Application Follow-Up",
+        headingColor: "text-green-700",
+        body: "Send this 5–7 business days after submitting an application with no response.",
+        orderedList: [
+          "Subject: Following up — [Job Title] application",
+          "Restate your application date and role",
+          "One sentence reinforcing your strongest qualification for this specific role",
+          "Express continued interest without desperation",
+          "Ask for a timeline update",
+        ],
+      },
+      {
+        heading: "Template 4: Cold Email Follow-Up (Day 3)",
+        headingColor: "text-green-700",
+        body: "Most replies to cold emails come on the 2nd or 3rd touch. This is the bump.",
+        orderedList: [
+          "Subject: Re: [original subject line]",
+          "One-line opener that adds new value (stat, case study, or relevant news)",
+          "Restate your offer in one sentence",
+          "Single CTA — make it even easier than the original ask",
+        ],
+      },
+      {
+        heading: "How to Use These Templates with AI Tools",
+        body: "The fastest workflow: paste the template structure into ChatGPT with your context filled in. For example: 'Write a post-meeting follow-up email using this structure: [paste template]. Context: I met with [name] at [company] to discuss [topic]. Their main challenge was [X]. My solution addresses this by [Y].' ChatGPT will generate a polished, personalized email in seconds. Grammarly's AI can then refine tone and fix any awkward phrasing.",
+        listItems: [
+          "ChatGPT / Claude: Best for generating full email drafts from template prompts",
+          "Grammarly: Best for polishing AI-generated drafts and adjusting tone",
+          "Copy.ai: Has pre-built follow-up email sequences with AI personalization",
+          "Lavender: Analyzes your follow-up and scores it before you send",
+        ],
+      },
+    ],
+    verdict: {
+      heading: "The Rule That Gets More Replies",
+      body: "One specific detail beats generic every time. The templates above only work if you replace every bracket with something real. AI can help you find the right words — but it's the specific reference to their situation that makes someone reply. The tools help with speed; the specificity is on you.",
+    },
+  },
+  {
+    slug: "grammarly-vs-chatgpt-email-replies",
+    title: "Grammarly vs ChatGPT for Email Replies: Which AI Writes Better Emails?",
+    excerpt:
+      "Grammarly fixes your emails. ChatGPT writes them for you. We tested both on real email scenarios — here's when to use each, and when to use both together.",
+    date: "March 5, 2026",
+    dateISO: "2026-03-05",
+    author: "Research Team",
+    authorSlug: "research-team",
+    readTime: "8 min read",
+    category: "Comparison",
+    color: "from-purple-500 to-violet-600",
+    toolSlugs: ["grammarly", "chatgpt"],
+    sections: [
+      {
+        heading: "The Core Difference",
+        body: "Grammarly and ChatGPT solve different problems for email. Grammarly is a writing assistant — it improves emails you've already written by fixing grammar, adjusting tone, and catching clarity issues. ChatGPT is a writing generator — it writes entire emails from a short prompt. Neither is strictly better; the right choice depends on whether you're a writer who needs polish or a non-writer who needs a starting point.",
+        listItems: [
+          "Grammarly: Best when you have a draft and want it to be better",
+          "ChatGPT: Best when you're staring at a blank compose window",
+          "Grammarly Premium adds tone detection and full rewrites — narrows the gap",
+          "ChatGPT needs good prompting or outputs generic, forgettable emails",
+        ],
+      },
+      {
+        heading: "Test 1: Responding to a Difficult Client Email",
+        headingColor: "text-purple-700",
+        body: "We gave both tools the same angry client email and asked for a professional, de-escalating reply. ChatGPT produced a complete draft in 8 seconds — well-structured, empathetic tone, clear next steps. Grammarly's rewrite feature produced a polished version of our own mediocre draft, but couldn't create one from scratch. Winner: ChatGPT for speed, Grammarly for keeping your voice.",
+        listItems: [
+          "ChatGPT draft quality: 8/10 — needed minor personalization",
+          "Grammarly (rewriting our draft): 7/10 — better but still our words",
+          "ChatGPT time to usable draft: ~30 seconds with a good prompt",
+          "Grammarly time to improvement: ~15 seconds on an existing draft",
+        ],
+      },
+      {
+        heading: "Test 2: Cold Outreach Email",
+        headingColor: "text-purple-700",
+        body: "For cold outreach, ChatGPT wins clearly — it generates complete, personalized drafts fast. But Grammarly's Premium tone analysis is valuable for checking whether your outreach sounds confident vs. desperate. The best workflow: generate with ChatGPT, polish with Grammarly.",
+      },
+      {
+        heading: "Test 3: Internal Team Update Email",
+        headingColor: "text-purple-700",
+        body: "For internal emails where you have all the content but want better clarity, Grammarly wins. Its inline suggestions (shorter sentences, active voice, clarity rewrites) improve your existing writing without replacing your voice — which matters for internal communications where people know you.",
+      },
+      {
+        heading: "Pricing Comparison",
+        headingColor: "text-purple-700",
+        body: "Cost is a real factor in the choice. ChatGPT Plus runs $20/month and includes GPT-4o access across all use cases — email is just one of hundreds of things it does. Grammarly Premium runs $12–30/month depending on billing cycle, but it's purpose-built for writing, with features ChatGPT doesn't have: inline browser suggestions, plagiarism check, and real-time tone detection as you type.",
+        listItems: [
+          "ChatGPT Plus: $20/month — general-purpose AI, email is one use case",
+          "Grammarly Premium: $12/month (annual) — writing-specific, browser extension included",
+          "Grammarly Business: $15/user/month — team features and style guides",
+          "Best value: Grammarly free + ChatGPT free tier covers most email use cases at $0",
+        ],
+      },
+      {
+        heading: "When to Use Both Together",
+        body: "The power combination: use ChatGPT to generate the first draft, then run it through Grammarly to catch any AI-isms (overly formal phrasing, generic openers, passive voice) and align it to your natural writing style. This takes about 2 minutes total and produces emails that are fast AND polished. Many professional users run this workflow daily.",
+        listItems: [
+          "Step 1: Prompt ChatGPT with your context and desired tone",
+          "Step 2: Paste the draft into Gmail/Outlook with Grammarly extension active",
+          "Step 3: Accept Grammarly's tone and clarity suggestions",
+          "Step 4: Add one personal detail ChatGPT couldn't know — send",
+        ],
+      },
+    ],
+    verdict: {
+      heading: "Which Should You Use?",
+      body: "If you write a lot of emails and already have something to say, Grammarly Premium is the better investment — it improves your work without replacing your voice. If you frequently face blank-page syndrome on important emails, ChatGPT Plus pays for itself quickly. For most professionals, the free versions of both cover 80% of email use cases at no cost.",
+    },
+  },
+  {
     slug: "state-of-ai-productivity-tools-2026",
     title: "The State of AI Productivity Tools: What's Working and What's Hype",
     excerpt:
