@@ -13,6 +13,7 @@ const staticAffiliateLinks: Record<string, string> = {
   resso: "https://www.awin1.com/cread.php?awinmid=85741&awinaffid=2805304&ued=https%3A%2F%2Fwww.resso.ai%2Fsignup",
   siteground: "https://www.siteground.com/index.htm?afcode=758135cea38bbc354897accd3183d9ff",
   nordvpn: "http://www.awin1.com/cread.php?awinmid=15132&awinaffid=2805304&clickref=",
+  railway: "https://railway.com?referralCode=IxgLVt",
 };
 
 function resolveDestination(slug: string): string | undefined {
