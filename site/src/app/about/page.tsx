@@ -10,71 +10,67 @@ export default function AboutPage() {
       <h1 className="text-4xl font-bold mb-8">About AI Productivity Hub</h1>
       <section className="prose prose-lg max-w-none">
         <p className="mb-6">
-          Welcome to AI Productivity Hub, your premier destination for
-          discovering how artificial intelligence can transform your workflow and
-          boost your efficiency.
+          We test AI productivity tools so you don&apos;t waste money on ones that
+          don&apos;t deliver. Every tool on this site has been put through real work
+          tasks &mdash; not hypothetical demos &mdash; before we write about it.
         </p>
         <p className="mb-6">
-          Our mission is to bridge the gap between cutting-edge AI technology and
-          practical, everyday use. We believe that AI should not be intimidating
-          or reserved for tech experts. Instead, it should be accessible to
-          everyone looking to work smarter, save time, and achieve more. We
-          provide in-depth reviews, tutorials, and comparisons of the latest AI
-          tools to help you make informed decisions about your tech stack.
+          There are hundreds of AI tools launching every month. Most of them are
+          mediocre. A few are genuinely useful. The problem is that every
+          tool&apos;s marketing page makes the same promises, and you can&apos;t tell the
+          difference until you&apos;ve burned $49 on a monthly subscription and three
+          hours setting it up. We do that part for you.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-10 mb-4">What We Offer</h2>
+        <h2 className="text-2xl font-semibold mt-10 mb-4">What We Actually Do</h2>
         <ul className="list-disc pl-6 mb-6 space-y-2">
           <li>
-            <strong>Expert Analysis of AI Software</strong> &mdash; We test and
-            review the most popular AI productivity tools so you do not have to
-            wade through marketing fluff to find what actually works.
+            <strong>Honest Tool Reviews</strong> &mdash; We test tools on real
+            tasks (not the cherry-picked demos vendors show you) and tell you
+            exactly where each tool excels and where it falls short.
           </li>
           <li>
-            <strong>Step-by-Step Automation Guides</strong> &mdash; Practical
-            tutorials that walk you through automating repetitive tasks, from
-            meeting notes to document signing to content creation.
+            <strong>Head-to-Head Comparisons</strong> &mdash; When two tools
+            claim to do the same thing, we run them side by side and pick a
+            winner. We don&apos;t hedge with &ldquo;it depends on your needs&rdquo; when one
+            tool is clearly better.
           </li>
           <li>
-            <strong>Curated Tool Lists</strong> &mdash; Hand-picked
-            recommendations organized by industry, use case, and budget so you
-            can find the right tool for your specific needs.
+            <strong>Practical Guides</strong> &mdash; Step-by-step walkthroughs
+            for automating specific tasks, from meeting notes to content creation
+            to project management.
           </li>
           <li>
-            <strong>Latest AI News &amp; Trends</strong> &mdash; Stay ahead of
-            the curve with our coverage of the rapidly evolving world of
-            artificial intelligence and how it impacts productivity.
+            <strong>Curated Recommendations</strong> &mdash; Organized by what
+            you actually need to get done, not by marketing category.
           </li>
         </ul>
 
-        <h2 className="text-2xl font-semibold mt-10 mb-4">Who We Serve</h2>
+        <h2 className="text-2xl font-semibold mt-10 mb-4">Who This Is For</h2>
         <p className="mb-4">
-          AI Productivity Hub is built for anyone who wants to reclaim their time
-          and work more effectively:
+          If you spend your workday in documents, meetings, emails, and project
+          tools, and you suspect AI could save you time but don&apos;t know where to
+          start &mdash; that&apos;s exactly who we built this for.
         </p>
         <ul className="list-disc pl-6 mb-6 space-y-2">
           <li>
-            <strong>Freelancers</strong> who juggle multiple clients and need to
-            streamline admin, invoicing, and content creation.
+            <strong>Freelancers</strong> who need to move fast and can&apos;t afford
+            to waste time on tools that don&apos;t work.
           </li>
           <li>
-            <strong>Small Business Owners</strong> looking for affordable AI
-            solutions to compete with larger organizations.
+            <strong>Small teams</strong> looking for AI tools that actually
+            justify their subscription cost.
           </li>
           <li>
-            <strong>Enterprise Teams</strong> seeking scalable tools to improve
-            collaboration, training, and customer support.
-          </li>
-          <li>
-            <strong>Anyone who wants to work smarter</strong> &mdash; whether you
-            are a student, a creative professional, or simply curious about how
-            AI can help you get more done in less time.
+            <strong>Anyone drowning in meetings</strong> &mdash; we have strong
+            opinions about which AI meeting tools are worth paying for.
           </li>
         </ul>
         <p>
-          Whether you are just starting to explore AI or you are ready to
-          overhaul your entire workflow, AI Productivity Hub is here to guide
-          you every step of the way.
+          We fund this site through affiliate partnerships and advertising. That
+          means some links earn us a commission &mdash; but we recommend tools based
+          on quality, not payout. If a tool is mediocre, we say so, even if it
+          has a generous affiliate program.
         </p>
       </section>
     </div>

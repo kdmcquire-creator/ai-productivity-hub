@@ -26,7 +26,7 @@ export default function HomePage() {
             Find the Best AI Tools for Your Productivity
           </h1>
           <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto mb-10">
-            Discover, compare, and choose the right AI tools to streamline your workflow. In-depth reviews, honest comparisons, and expert guides for every use case.
+            We test AI tools on real work so you don&apos;t have to. In-depth reviews, honest comparisons, and expert guides for every use case.
           </p>
 
           {/* CTAs */}

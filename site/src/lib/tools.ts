@@ -250,7 +250,7 @@ export const tools: Tool[] = [
       "Autofilling database properties from page content",
     ],
     pros: [
-      "Seamlessly integrated into an already powerful workspace",
+      "Built directly into Notion — no separate app, no copy-pasting, no context switching",
       "Q&A feature is excellent for finding information fast",
       "Works within your existing workflows without context switching",
       "Simple per-member pricing with no usage caps",
