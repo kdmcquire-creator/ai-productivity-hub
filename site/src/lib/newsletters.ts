@@ -1,51 +1,97 @@
-// Newsletter data model — flat-file TypeScript pattern
-// Mirrors the legaltech-hub architecture
+import { promises as fs } from "fs";
+import path from "path";
 
 export type NewsletterFormat =
-  | "ai-roundup"        // Weekly tool discoveries + news
-  | "deep-dive"         // Single tool in-depth review
-  | "head-to-head"      // Comparison format
-  | "productivity-hack" // Workflow tips and automation guides
+  | "the-toolkit"
+  | "deep-dive"
+  | "the-workflow";
 
 export type NewsletterStatus = "draft" | "queued" | "sent";
 
 export interface Newsletter {
   id: string;
-  format: NewsletterFormat;
+  title: string;
   subject: string;
-  preheader: string;
-  htmlContent: string;
-  textContent: string;
+  preheader?: string;
+  bodyHtml: string;
+  format: NewsletterFormat;
+  sendDate: string; // ISO string
   status: NewsletterStatus;
-  sendDate: string; // ISO date — FIFO ordering
-  sentAt?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: string; // ISO string
+  sentAt?: string; // ISO string
 }
 
-export const newsletterFormats: Record<
-  NewsletterFormat,
-  { name: string; description: string }
-> = {
-  "ai-roundup": {
-    name: "The AI Roundup",
-    description: "Weekly tool discoveries, launches, and news from the AI productivity space.",
-  },
-  "deep-dive": {
-    name: "Deep Dive",
-    description: "An in-depth review of a single AI tool — features, pricing, pros/cons, and verdict.",
-  },
-  "head-to-head": {
-    name: "Head to Head",
-    description: "Side-by-side comparison of competing tools in the same category.",
-  },
-  "productivity-hack": {
-    name: "Productivity Hack",
-    description: "Actionable tips for automating workflows and getting more done with AI.",
-  },
+const NEWSLETTERS_DIR = path.join(process.cwd(), "newsletters");
+
+async function ensureDir() {
+  await fs.mkdir(NEWSLETTERS_DIR, { recursive: true });
+}
+
+function filePath(id: string): string {
+  // Sanitize id to prevent path traversal
+  const safeId = id.replace(/[^a-zA-Z0-9_-]/g, "");
+  return path.join(NEWSLETTERS_DIR, `${safeId}.json`);
+}
+
+export async function getAllNewsletters(): Promise<Newsletter[]> {
+  await ensureDir();
+  const files = await fs.readdir(NEWSLETTERS_DIR);
+  const jsonFiles = files.filter((f) => f.endsWith(".json"));
+  const newsletters: Newsletter[] = [];
+
+  for (const file of jsonFiles) {
+    try {
+      const raw = await fs.readFile(path.join(NEWSLETTERS_DIR, file), "utf-8");
+      newsletters.push(JSON.parse(raw) as Newsletter);
+    } catch {
+      // Skip malformed files
+    }
+  }
+
+  // Sort by sendDate ascending
+  newsletters.sort(
+    (a, b) => new Date(a.sendDate).getTime() - new Date(b.sendDate).getTime()
+  );
+  return newsletters;
+}
+
+export async function getNewsletter(
+  id: string
+): Promise<Newsletter | null> {
+  try {
+    const raw = await fs.readFile(filePath(id), "utf-8");
+    return JSON.parse(raw) as Newsletter;
+  } catch {
+    return null;
+  }
+}
+
+export async function saveNewsletter(newsletter: Newsletter): Promise<void> {
+  await ensureDir();
+  await fs.writeFile(filePath(newsletter.id), JSON.stringify(newsletter, null, 2), "utf-8");
+}
+
+export async function deleteNewsletter(id: string): Promise<boolean> {
+  try {
+    await fs.unlink(filePath(id));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function generateId(): string {
+  return `nl_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+export const FORMAT_LABELS: Record<NewsletterFormat, string> = {
+  "the-toolkit": "The Toolkit",
+  "deep-dive": "Deep Dive",
+  "the-workflow": "The Workflow",
 };
 
-// Validate newsletter format
-export function isValidFormat(format: string): format is NewsletterFormat {
-  return format in newsletterFormats;
-}
+export const FORMAT_COLORS: Record<NewsletterFormat, string> = {
+  "the-toolkit": "#2563eb",
+  "deep-dive": "#7c3aed",
+  "the-workflow": "#059669",
+};
