@@ -24,3 +24,5 @@ Thumbs.db
 # Debug logs
 npm-debug.log*
 .claude/
+.mcp.json
+.remember/

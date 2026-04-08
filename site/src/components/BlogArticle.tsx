@@ -8,6 +8,29 @@ import SiteGroundLeaderboard from "@/components/SiteGroundLeaderboard";
 import { NordVPNLeaderboard } from "@/components/NordVPNLeaderboard";
 import SidebarAmazon from "@/components/SidebarAmazon";
 
+/** Convert markdown-style [text](url) links in a string to <a> elements. */
+function parseLinks(text: string): React.ReactNode {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) => {
+    const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (match) {
+      const isInternal = match[2].startsWith("/");
+      return (
+        <a
+          key={i}
+          href={match[2]}
+          {...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+          className="text-blue-600 hover:underline font-medium"
+        >
+          {match[1]}
+        </a>
+      );
+    }
+    return part;
+  });
+}
+
 const calloutColors = {
   green: "bg-green-50 border-green-200 border-l-green-500",
   blue: "bg-blue-50 border-blue-200 border-l-blue-500",
@@ -33,7 +56,7 @@ function SectionBlock({ section }: { section: BlogSection }) {
         </p>
       )}
       {section.body && (
-        <p className="text-lg leading-8 text-gray-700 mb-6">{section.body}</p>
+        <p className="text-lg leading-8 text-gray-700 mb-6">{parseLinks(section.body)}</p>
       )}
       {section.listItems && (
         <ul className="list-disc pl-6 mb-6 text-gray-700 space-y-2.5">
@@ -42,10 +65,10 @@ function SectionBlock({ section }: { section: BlogSection }) {
               {item.includes(":") ? (
                 <>
                   <strong>{item.split(":")[0]}:</strong>
-                  {item.split(":").slice(1).join(":")}
+                  {parseLinks(item.split(":").slice(1).join(":"))}
                 </>
               ) : (
-                item
+                parseLinks(item)
               )}
             </li>
           ))}
@@ -55,7 +78,7 @@ function SectionBlock({ section }: { section: BlogSection }) {
         <ol className="list-decimal pl-6 space-y-2.5 text-gray-700">
           {section.orderedList.map((item, i) => (
             <li key={i} className="leading-relaxed">
-              {item}
+              {parseLinks(item)}
             </li>
           ))}
         </ol>
