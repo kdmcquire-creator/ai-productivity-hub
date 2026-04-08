@@ -7,6 +7,7 @@ import SiteGroundBanner from "@/components/SiteGroundBanner";
 import SiteGroundLeaderboard from "@/components/SiteGroundLeaderboard";
 import { NordVPNLeaderboard } from "@/components/NordVPNLeaderboard";
 import SidebarAmazon from "@/components/SidebarAmazon";
+import RelatedPosts from "@/components/RelatedPosts";
 
 /** Convert markdown-style [text](url) links in a string to <a> elements. */
 function parseLinks(text: string): React.ReactNode {
@@ -218,6 +219,12 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
                 </div>
               </section>
             )}
+
+            {/* Related Posts */}
+            <RelatedPosts
+              currentSlug={post.slug}
+              currentCategory={post.category}
+            />
 
             <SiteGroundBanner />
           </div>

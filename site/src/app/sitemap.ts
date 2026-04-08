@@ -48,25 +48,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${BASE_URL}/privacy/`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
+      changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${BASE_URL}/terms/`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
+      changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${BASE_URL}/disclaimer/`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
+      changeFrequency: "yearly",
       priority: 0.3,
     },
     {
       url: `${BASE_URL}/affiliate-disclosure/`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
+      changeFrequency: "yearly",
       priority: 0.3,
     },
   ];
