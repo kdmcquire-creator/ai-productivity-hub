@@ -22,13 +22,10 @@
   "observability": {
     "enabled": true
   },
-  // Single cron trigger dispatches to all scheduled endpoints
-  // Each endpoint self-determines what to process
-  "triggers": {
-    "crons": [
-      "0 0,6,12,18 * * *"
-    ]
-  },
+  // NOTE: Cron triggers removed — OpenNext Cloudflare workers don't export
+  // a scheduled() handler, so triggers.crons fires into the void.
+  // Cron dispatching is handled by the moonsmoke-cron-scheduler worker
+  // which calls /api/cron/ via HTTP fetch. See the scheduler worker for config.
   "kv_namespaces": [
     {
       "binding": "AFFILIATE_CLICKS",
