@@ -112,11 +112,11 @@ export const comparisons: Comparison[] = [
     tool2Name: "Claude",
     title: "ChatGPT vs Claude: Which AI Assistant is Better?",
     excerpt:
-      "ChatGPT and Claude are the two leading AI assistants in 2025. Both handle writing, coding, and analysis — but each has a distinct personality, context window, and set of strengths.",
-    dateISO: "2025-11-01",
+      "ChatGPT and Claude are the two leading AI assistants in 2026. Both handle writing, coding, and analysis — but each has a distinct personality, context window, and set of strengths.",
+    dateISO: "2026-04-07",
     verdict:
-      "ChatGPT edges ahead for most users thanks to its massive plugin ecosystem, image generation via DALL-E, and broadest integrations. Claude is the better pick for long-document analysis, nuanced writing tasks, and users who prefer a more conversational, honest AI.",
-    verdictWinner: "tool1",
+      "Both platforms are now extremely capable. ChatGPT leads in multimodal features (image generation, voice, video) and its massive GPT store ecosystem. Claude leads in long-context analysis (1M token window), nuanced writing, and coding with Claude Code. The gap has narrowed significantly — pick based on your primary use case.",
+    verdictWinner: "tie",
     rows: [
       {
         feature: "Pricing (entry)",
@@ -126,8 +126,8 @@ export const comparisons: Comparison[] = [
       },
       {
         feature: "Free Tier",
-        tool1: "Yes — GPT-3.5 free",
-        tool2: "Yes — limited Claude 3 free",
+        tool1: "Yes — GPT-4o mini free",
+        tool2: "Yes — Claude Sonnet free (limited)",
         winner: "tie",
       },
       {
@@ -138,27 +138,27 @@ export const comparisons: Comparison[] = [
       },
       {
         feature: "Context Window",
-        tool1: "128k tokens (GPT-4o)",
-        tool2: "200k tokens (Claude 3.5)",
+        tool1: "128k tokens (GPT-4o / GPT-5)",
+        tool2: "200k–1M tokens (Claude Opus)",
         winner: "tool2",
       },
       {
         feature: "Image Generation",
-        tool1: "Yes — DALL-E 3 built-in",
-        tool2: "No image generation",
+        tool1: "Yes — DALL-E + GPT-5 native",
+        tool2: "No built-in image generation",
         winner: "tool1",
       },
       {
         feature: "Coding Ability",
-        tool1: "Excellent, Code Interpreter",
-        tool2: "Excellent, strong reasoning",
+        tool1: "Excellent, Code Interpreter + Canvas",
+        tool2: "Excellent — Claude Code (agentic CLI)",
         winner: "tie",
       },
       {
         feature: "Integration & Plugins",
-        tool1: "GPT store, 1000+ plugins",
-        tool2: "API available, fewer plugins",
-        winner: "tool1",
+        tool1: "GPT store, 1000+ plugins, custom GPTs",
+        tool2: "MCP protocol, Claude Code, API + IDE extensions",
+        winner: "tie",
       },
       {
         feature: "Safety & Honesty",
@@ -174,7 +174,7 @@ export const comparisons: Comparison[] = [
       },
       {
         question: "Which AI assistant has a better free tier?",
-        answer: "ChatGPT offers a free tier with GPT-4o mini access. Claude also offers a free tier with limited usage of Claude Sonnet. Both are generous for casual use.",
+        answer: "ChatGPT offers a free tier with GPT-4o mini access. Claude offers a free tier with limited Claude Sonnet usage. Both are generous for casual use — the paid tiers ($20/mo each) unlock the flagship models.",
       },
       {
         question: "Can ChatGPT and Claude handle coding tasks?",
