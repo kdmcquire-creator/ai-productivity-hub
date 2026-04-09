@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
   const headers = { Authorization: `Bearer ${cronSecret}` };
 
-  const endpoints = ["check-links", "stale-queue", "content-pipeline", "send-newsletter", "analytics-digest"];
+  const endpoints = ["check-links", "stale-queue", "content-pipeline", "send-newsletter", "analytics-digest", "social-post"];
 
   const results = await Promise.allSettled(
     endpoints.map((ep) =>
