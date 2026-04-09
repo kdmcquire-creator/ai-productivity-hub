@@ -12,6 +12,8 @@ export interface Newsletter {
   id: string;
   title: string;
   subject: string;
+  subjectB?: string; // A/B test variant subject line
+  subjectBSentPercentage?: number; // Fraction of recipients who get variant B (e.g. 0.5 = 50%)
   preheader?: string;
   bodyHtml: string;
   format: NewsletterFormat;
