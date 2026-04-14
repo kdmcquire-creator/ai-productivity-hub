@@ -415,8 +415,18 @@ async function sendDigestEmail(
 // ---------------------------------------------------------------------------
 
 export async function POST(request: Request) {
-  const authError = verifyCronAuth(request);
-  if (authError) return authError;
+  // Accept both CRON_SECRET (via verifyCronAuth) and ADMIN_API_KEY (via x-api-key)
+  // so the admin dashboard can trigger this endpoint manually.
+  const cronAuth = verifyCronAuth(request);
+  if (cronAuth) {
+    // Cron auth failed — try admin key as fallback
+    const adminKey = process.env.ADMIN_API_KEY;
+    const providedKey = request.headers.get("x-api-key") ||
+      request.headers.get("authorization")?.replace("Bearer ", "");
+    if (!adminKey || providedKey !== adminKey) {
+      return cronAuth; // Neither auth method worked
+    }
+  }
 
   // ------- Day-of-week gate -------
   // The dispatcher calls this every 6 hours, but we only run on Monday mornings.
