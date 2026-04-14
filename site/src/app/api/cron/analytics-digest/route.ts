@@ -420,9 +420,12 @@ export async function POST(request: Request) {
 
   // ------- Day-of-week gate -------
   // The dispatcher calls this every 6 hours, but we only run on Monday mornings.
+  // Pass ?force=true to bypass day/hour check (for manual testing via admin dashboard).
+  const reqUrl = new URL(request.url);
+  const force = reqUrl.searchParams.get("force") === "true";
   const now = new Date();
 
-  if (now.getUTCDay() !== 1) {
+  if (!force && now.getUTCDay() !== 1) {
     // 1 = Monday
     console.log(
       JSON.stringify({
@@ -434,7 +437,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ skipped: true, reason: "Not Monday" });
   }
 
-  if (now.getUTCHours() > 6) {
+  if (!force && now.getUTCHours() > 6) {
     console.log(
       JSON.stringify({
         type: "analytics_digest_skipped",
