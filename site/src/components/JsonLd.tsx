@@ -97,6 +97,7 @@ export function ToolJsonLd({ tool }: { tool: Tool }) {
         applicationCategory: "ProductivityApplication",
         operatingSystem: "Web",
         offers: offers.length === 1 ? offers[0] : offers,
+        featureList: tool.features,
       }}
     />
   );

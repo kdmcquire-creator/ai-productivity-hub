@@ -7,6 +7,7 @@ import {
   queryGscPerformance,
   queryGscIndexing,
 } from "@/lib/gsc-client";
+import type { GscIndexingResult } from "@/lib/gsc-client";
 
 export const dynamic = "force-dynamic";
 
@@ -73,11 +74,50 @@ interface GscSummary {
   error?: string;
 }
 
+interface SiteIndexingCoverage {
+  siteName: string;
+  siteUrl: string;
+  submitted: number;
+  indexed: number;
+  coverageRate: string; // e.g. "72%"
+  sitemapErrors: number;
+  sitemapWarnings: number;
+  error?: string;
+}
+
+interface IndexingSummary {
+  sites: SiteIndexingCoverage[];
+  totalSubmitted: number;
+  totalIndexed: number;
+  available: boolean;
+  error?: string;
+}
+
+interface SiteCoreWebVitals {
+  name: string;
+  url: string;
+  performanceScore: number | null; // 0-100
+  lcp: number | null; // seconds
+  inp: number | null; // milliseconds
+  cls: number | null; // unitless ratio
+  fieldData: boolean; // true = CrUX real-user data, false = Lighthouse lab data
+  error?: string;
+}
+
+interface CoreWebVitalsSummary {
+  strategy: "mobile" | "desktop";
+  sites: SiteCoreWebVitals[];
+  available: boolean;
+  error?: string;
+}
+
 interface DigestPayload {
   generatedAt: string;
   sites: SiteHealthResult[];
   traffic: TrafficSummary;
   gsc: GscSummary;
+  indexing: IndexingSummary;
+  cwv: CoreWebVitalsSummary;
   newsletters: NewsletterSummary;
   affiliates: AffiliateSummary;
   actionItems: string[];
@@ -97,6 +137,16 @@ const SITES = [
 const FETCH_TIMEOUT_MS = 10_000;
 const SLOW_THRESHOLD_MS = 3_000;
 const CF_GQL_URL = "https://api.cloudflare.com/client/v4/graphql";
+const PSI_URL = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed";
+const PSI_TIMEOUT_MS = 70_000; // PSI runs a full Lighthouse audit; takes 20-60s per URL
+
+// Core Web Vitals thresholds (Google's "Good" / "Needs Improvement" / "Poor" buckets)
+const CWV_THRESHOLDS = {
+  lcp: { good: 2.5, poor: 4.0 }, // seconds
+  inp: { good: 200, poor: 500 }, // milliseconds
+  cls: { good: 0.1, poor: 0.25 }, // unitless
+  performanceScore: { good: 90, poor: 50 }, // 0-100
+};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -296,6 +346,218 @@ async function getTrafficSummary(): Promise<TrafficSummary> {
   }
 }
 
+/** Fetch sitemap indexing coverage for all 4 sites from GSC. */
+async function getIndexingSummary(): Promise<IndexingSummary> {
+  if (!process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+    return {
+      sites: [],
+      totalSubmitted: 0,
+      totalIndexed: 0,
+      available: false,
+      error: "GOOGLE_SERVICE_ACCOUNT_JSON not configured",
+    };
+  }
+
+  try {
+    const accessToken = await getGscAccessToken();
+
+    const results = await Promise.allSettled(
+      GSC_PROPERTIES.map(async (prop) => {
+        const indexing: GscIndexingResult = await queryGscIndexing(
+          accessToken,
+          prop.siteUrl,
+        );
+
+        // Sum submitted and indexed across all sitemaps on this site and across all content-type buckets
+        let submitted = 0;
+        let indexed = 0;
+        let sitemapErrors = 0;
+        let sitemapWarnings = 0;
+        for (const sm of indexing.sitemaps) {
+          sitemapErrors += sm.errors;
+          sitemapWarnings += sm.warnings;
+          for (const c of sm.contents ?? []) {
+            submitted += c.submitted;
+            indexed += c.indexed;
+          }
+        }
+
+        const coverageRate =
+          submitted > 0
+            ? Math.round((indexed / submitted) * 100) + "%"
+            : "N/A";
+
+        return {
+          siteName: prop.siteName,
+          siteUrl: prop.siteUrl,
+          submitted,
+          indexed,
+          coverageRate,
+          sitemapErrors,
+          sitemapWarnings,
+        } satisfies SiteIndexingCoverage;
+      }),
+    );
+
+    const sites: SiteIndexingCoverage[] = results.map((r, i) =>
+      r.status === "fulfilled"
+        ? r.value
+        : {
+            siteName: GSC_PROPERTIES[i].siteName,
+            siteUrl: GSC_PROPERTIES[i].siteUrl,
+            submitted: 0,
+            indexed: 0,
+            coverageRate: "N/A",
+            sitemapErrors: 0,
+            sitemapWarnings: 0,
+            error:
+              r.reason instanceof Error ? r.reason.message : "Indexing fetch failed",
+          },
+    );
+
+    const totalSubmitted = sites.reduce((acc, s) => acc + s.submitted, 0);
+    const totalIndexed = sites.reduce((acc, s) => acc + s.indexed, 0);
+
+    return {
+      sites,
+      totalSubmitted,
+      totalIndexed,
+      available: true,
+    };
+  } catch (err) {
+    return {
+      sites: [],
+      totalSubmitted: 0,
+      totalIndexed: 0,
+      available: false,
+      error: err instanceof Error ? err.message : "Unknown indexing error",
+    };
+  }
+}
+
+/** Fetch Core Web Vitals + Lighthouse performance data for one site via PSI API. */
+async function getCoreWebVitalsForSite(site: {
+  name: string;
+  url: string;
+}): Promise<SiteCoreWebVitals> {
+  const result: SiteCoreWebVitals = {
+    name: site.name,
+    url: site.url,
+    performanceScore: null,
+    lcp: null,
+    inp: null,
+    cls: null,
+    fieldData: false,
+  };
+
+  try {
+    const apiKey = process.env.PAGESPEED_API_KEY;
+    const params = new URLSearchParams({
+      url: site.url,
+      strategy: "mobile",
+      category: "performance",
+    });
+    if (apiKey) params.set("key", apiKey);
+
+    const res = await fetchWithTimeout(`${PSI_URL}?${params.toString()}`, {
+      timeout: PSI_TIMEOUT_MS,
+    });
+
+    if (!res.ok) {
+      result.error = `PSI ${res.status}`;
+      return result;
+    }
+
+    // PSI response shape is complex and partially optional — type loosely and guard each access.
+    const data = (await res.json()) as {
+      lighthouseResult?: {
+        categories?: { performance?: { score?: number } };
+        audits?: Record<string, { numericValue?: number }>;
+      };
+      loadingExperience?: {
+        metrics?: Record<string, { percentile?: number }>;
+      };
+    };
+
+    // Lighthouse performance score (lab data, 0-1 → 0-100)
+    const perfScore = data?.lighthouseResult?.categories?.performance?.score;
+    if (typeof perfScore === "number") {
+      result.performanceScore = Math.round(perfScore * 100);
+    }
+
+    // Prefer CrUX field data (real user measurements from Chrome UX Report)
+    const cruxMetrics = data?.loadingExperience?.metrics;
+    if (cruxMetrics && Object.keys(cruxMetrics).length > 0) {
+      result.fieldData = true;
+      const lcpMs = cruxMetrics.LARGEST_CONTENTFUL_PAINT_MS?.percentile;
+      const inpMs =
+        cruxMetrics.INTERACTION_TO_NEXT_PAINT?.percentile ??
+        cruxMetrics.EXPERIMENTAL_INTERACTION_TO_NEXT_PAINT?.percentile;
+      const clsX100 = cruxMetrics.CUMULATIVE_LAYOUT_SHIFT_SCORE?.percentile;
+      if (typeof lcpMs === "number") result.lcp = lcpMs / 1000; // ms → seconds
+      if (typeof inpMs === "number") result.inp = inpMs;
+      if (typeof clsX100 === "number") result.cls = clsX100 / 100; // CrUX reports CLS × 100
+    }
+
+    // Fall back to Lighthouse lab data when CrUX field data unavailable (new/low-traffic sites)
+    if (!result.fieldData) {
+      const audits = data?.lighthouseResult?.audits;
+      const lcpAudit = audits?.["largest-contentful-paint"];
+      const clsAudit = audits?.["cumulative-layout-shift"];
+      if (typeof lcpAudit?.numericValue === "number") {
+        result.lcp = lcpAudit.numericValue / 1000;
+      }
+      if (typeof clsAudit?.numericValue === "number") {
+        result.cls = clsAudit.numericValue;
+      }
+      // INP requires real user interaction data — no lab equivalent
+    }
+
+    return result;
+  } catch (err) {
+    result.error = err instanceof Error ? err.message : "PSI fetch failed";
+    return result;
+  }
+}
+
+/** Fetch Core Web Vitals for all 4 sites in parallel. */
+async function getCoreWebVitalsSummary(): Promise<CoreWebVitalsSummary> {
+  try {
+    const results = await Promise.allSettled(
+      SITES.map((site) => getCoreWebVitalsForSite(site)),
+    );
+
+    const sites: SiteCoreWebVitals[] = results.map((r, i) =>
+      r.status === "fulfilled"
+        ? r.value
+        : {
+            name: SITES[i].name,
+            url: SITES[i].url,
+            performanceScore: null,
+            lcp: null,
+            inp: null,
+            cls: null,
+            fieldData: false,
+            error:
+              r.reason instanceof Error ? r.reason.message : "PSI check failed",
+          },
+    );
+
+    return {
+      strategy: "mobile",
+      sites,
+      available: true,
+    };
+  } catch (err) {
+    return {
+      strategy: "mobile",
+      sites: [],
+      available: false,
+      error: err instanceof Error ? err.message : "Unknown CWV error",
+    };
+  }
+}
+
 /** Compile newsletter queue stats. */
 async function getNewsletterSummary(): Promise<NewsletterSummary> {
   try {
@@ -411,10 +673,55 @@ function deriveActionItems(
   sites: SiteHealthResult[],
   traffic: TrafficSummary,
   gsc: GscSummary,
+  indexing: IndexingSummary,
+  cwv: CoreWebVitalsSummary,
   newsletters: NewsletterSummary,
   affiliates: AffiliateSummary,
 ): string[] {
   const items: string[] = [];
+
+  // Indexing coverage alerts
+  if (indexing.available) {
+    for (const s of indexing.sites) {
+      if (s.error) {
+        items.push(`${s.siteName}: indexing data error — ${s.error}`);
+        continue;
+      }
+      if (s.submitted > 0) {
+        const ratio = s.indexed / s.submitted;
+        if (ratio < 0.5) {
+          items.push(
+            `${s.siteName}: only ${s.indexed}/${s.submitted} pages indexed (${s.coverageRate}) — review GSC coverage report`,
+          );
+        }
+      }
+      if (s.sitemapErrors > 0) {
+        items.push(`${s.siteName}: ${s.sitemapErrors} sitemap errors reported by GSC`);
+      }
+    }
+  }
+
+  // Core Web Vitals alerts (poor thresholds only, to keep noise down)
+  if (cwv.available) {
+    for (const s of cwv.sites) {
+      if (s.error) {
+        items.push(`${s.name}: Core Web Vitals check failed (${s.error})`);
+        continue;
+      }
+      if (s.performanceScore !== null && s.performanceScore < CWV_THRESHOLDS.performanceScore.poor) {
+        items.push(`${s.name}: Lighthouse performance score ${s.performanceScore}/100 (poor)`);
+      }
+      if (s.lcp !== null && s.lcp > CWV_THRESHOLDS.lcp.poor) {
+        items.push(`${s.name}: LCP ${s.lcp.toFixed(1)}s (poor — target <2.5s)`);
+      }
+      if (s.inp !== null && s.inp > CWV_THRESHOLDS.inp.poor) {
+        items.push(`${s.name}: INP ${Math.round(s.inp)}ms (poor — target <200ms)`);
+      }
+      if (s.cls !== null && s.cls > CWV_THRESHOLDS.cls.poor) {
+        items.push(`${s.name}: CLS ${s.cls.toFixed(2)} (poor — target <0.1)`);
+      }
+    }
+  }
 
   // GSC alerts
   if (gsc.available) {
@@ -618,6 +925,101 @@ function buildDigestHtml(digest: DigestPayload): string {
         </table>
       </div>
       ` : `<p style="color:#9ca3af;font-size:14px;">${digest.traffic.error || "Traffic data not available. Add CLOUDFLARE_API_TOKEN to the PH worker."}</p>`}
+    </div>
+
+    <!-- Indexing Coverage -->
+    <div style="padding:0 24px 24px;">
+      <h2 style="margin:0 0 16px;font-size:18px;color:#1a1a2e;">Indexing Coverage (Google Search Console)</h2>
+      ${digest.indexing.available && digest.indexing.sites.length > 0 ? `
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+          <thead>
+            <tr style="background:#f9fafb;">
+              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Site</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Submitted</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Indexed</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Coverage</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Issues</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${digest.indexing.sites.map((s) => {
+              const rate = s.submitted > 0 ? s.indexed / s.submitted : 0;
+              const rateColor = rate >= 0.8 ? "#16a34a" : rate >= 0.5 ? "#f59e0b" : "#ef4444";
+              const issueColor = s.sitemapErrors > 0 ? "#ef4444" : s.sitemapWarnings > 0 ? "#f59e0b" : "#9ca3af";
+              const issueText = s.sitemapErrors > 0 || s.sitemapWarnings > 0
+                ? `${s.sitemapErrors > 0 ? s.sitemapErrors + " err" : ""}${s.sitemapErrors > 0 && s.sitemapWarnings > 0 ? ", " : ""}${s.sitemapWarnings > 0 ? s.sitemapWarnings + " warn" : ""}`
+                : "—";
+              return `<tr>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:500;">${s.siteName}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;">${s.submitted.toLocaleString()}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;font-weight:600;">${s.indexed.toLocaleString()}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;color:${rateColor};font-weight:600;">${s.coverageRate}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;color:${issueColor};font-size:12px;">${issueText}</td>
+              </tr>`;
+            }).join("")}
+            <tr style="background:#f9fafb;font-weight:600;">
+              <td style="padding:10px 12px;">Total</td>
+              <td style="padding:10px 12px;text-align:center;">${digest.indexing.totalSubmitted.toLocaleString()}</td>
+              <td style="padding:10px 12px;text-align:center;">${digest.indexing.totalIndexed.toLocaleString()}</td>
+              <td style="padding:10px 12px;text-align:center;">${digest.indexing.totalSubmitted > 0 ? Math.round((digest.indexing.totalIndexed / digest.indexing.totalSubmitted) * 100) + "%" : "N/A"}</td>
+              <td style="padding:10px 12px;text-align:center;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      ` : `<p style="color:#9ca3af;font-size:14px;">${digest.indexing.error || "Indexing data not available."}</p>`}
+    </div>
+
+    <!-- Core Web Vitals -->
+    <div style="padding:0 24px 24px;">
+      <h2 style="margin:0 0 16px;font-size:18px;color:#1a1a2e;">Core Web Vitals (Mobile)</h2>
+      ${digest.cwv.available && digest.cwv.sites.length > 0 ? `
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+          <thead>
+            <tr style="background:#f9fafb;">
+              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Site</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Perf</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">LCP</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">INP</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">CLS</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${digest.cwv.sites.map((s) => {
+              const colorFor = (val: number | null, good: number, poor: number, reverse = false) => {
+                if (val === null) return "#9ca3af";
+                if (reverse) {
+                  // Higher is better (perf score)
+                  if (val >= good) return "#16a34a";
+                  if (val >= poor) return "#f59e0b";
+                  return "#ef4444";
+                }
+                // Lower is better (LCP, INP, CLS)
+                if (val <= good) return "#16a34a";
+                if (val <= poor) return "#f59e0b";
+                return "#ef4444";
+              };
+              const perfColor = colorFor(s.performanceScore, CWV_THRESHOLDS.performanceScore.good, CWV_THRESHOLDS.performanceScore.poor, true);
+              const lcpColor = colorFor(s.lcp, CWV_THRESHOLDS.lcp.good, CWV_THRESHOLDS.lcp.poor);
+              const inpColor = colorFor(s.inp, CWV_THRESHOLDS.inp.good, CWV_THRESHOLDS.inp.poor);
+              const clsColor = colorFor(s.cls, CWV_THRESHOLDS.cls.good, CWV_THRESHOLDS.cls.poor);
+              return `<tr>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:500;">${s.name}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;color:${perfColor};font-weight:600;">${s.performanceScore !== null ? s.performanceScore : "—"}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;color:${lcpColor};">${s.lcp !== null ? s.lcp.toFixed(1) + "s" : "—"}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;color:${inpColor};">${s.inp !== null ? Math.round(s.inp) + "ms" : "—"}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;color:${clsColor};">${s.cls !== null ? s.cls.toFixed(2) : "—"}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:12px;color:#6b7280;">${s.fieldData ? "CrUX" : s.error ? "Error" : "Lab"}</td>
+              </tr>`;
+            }).join("")}
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:8px 0 0;font-size:12px;color:#9ca3af;">Green = Good, Amber = Needs Improvement, Red = Poor. CrUX data is real-user measurements; Lab is Lighthouse simulation.</p>
+      ` : `<p style="color:#9ca3af;font-size:14px;">${digest.cwv.error || "Core Web Vitals data not available."}</p>`}
     </div>
 
     <!-- Search Performance (GSC) -->
@@ -843,10 +1245,12 @@ export async function POST(request: Request) {
 
   // ------- Gather data in parallel -------
   const selfOrigin = reqUrl.origin;
-  const [siteResults, traffic, gsc, newsletters, affiliates] = await Promise.all([
+  const [siteResults, traffic, gsc, indexing, cwv, newsletters, affiliates] = await Promise.all([
     Promise.allSettled(SITES.map((s) => checkSite(s, selfOrigin))),
     getTrafficSummary(),
     getGscSummary(),
+    getIndexingSummary(),
+    getCoreWebVitalsSummary(),
     getNewsletterSummary(),
     Promise.resolve(getAffiliateSummary()),
   ]);
@@ -866,13 +1270,15 @@ export async function POST(request: Request) {
         }
   );
 
-  const actionItems = deriveActionItems(sites, traffic, gsc, newsletters, affiliates);
+  const actionItems = deriveActionItems(sites, traffic, gsc, indexing, cwv, newsletters, affiliates);
 
   const digest: DigestPayload = {
     generatedAt: now.toISOString(),
     sites,
     traffic,
     gsc,
+    indexing,
+    cwv,
     newsletters,
     affiliates,
     actionItems,

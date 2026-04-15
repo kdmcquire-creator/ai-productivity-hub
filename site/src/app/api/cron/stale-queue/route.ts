@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { verifyCronAuth } from "@/lib/cron-auth";
 import { tools } from "@/lib/tools";
+import { blogPosts } from "@/lib/blog";
+import { submitToIndexNow } from "@/lib/index-now";
 
 const STALE_DAYS = parseInt(process.env.STALE_DAYS || "90", 10);
+const HOST = "aiproductivityhub.co";
+const BASE_URL = `https://${HOST}`;
+const INDEXNOW_RECENT_POSTS = 10;
 
 interface StaleToolReport {
   slug: string;
@@ -99,5 +104,42 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json({ summary, staleTools });
+  // ─── IndexNow ping ────────────────────────────────────────────────────────
+  // Notify Bing/Yandex (and signal Google) to recrawl recent content.
+  // This is purely informational — it doesn't modify any content.
+  let indexNowResult: { success: boolean; urlCount: number; error?: string } = {
+    success: false,
+    urlCount: 0,
+  };
+  try {
+    const recentPostUrls = [...blogPosts]
+      .sort((a, b) => (b.dateISO || "").localeCompare(a.dateISO || ""))
+      .slice(0, INDEXNOW_RECENT_POSTS)
+      .map((p) => `${BASE_URL}/blog/${p.slug}/`);
+
+    const urls = [`${BASE_URL}/`, ...recentPostUrls];
+    const result = await submitToIndexNow(HOST, urls);
+    indexNowResult = {
+      success: result.success,
+      urlCount: urls.length,
+      error: result.error,
+    };
+    console.log(
+      JSON.stringify({
+        type: "stale_queue_indexnow_ping",
+        success: result.success,
+        urlCount: urls.length,
+        error: result.error,
+      }),
+    );
+  } catch (err) {
+    console.error(
+      JSON.stringify({
+        type: "stale_queue_indexnow_error",
+        error: err instanceof Error ? err.message : "Unknown",
+      }),
+    );
+  }
+
+  return NextResponse.json({ summary, staleTools, indexNow: indexNowResult });
 }

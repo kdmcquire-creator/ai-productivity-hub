@@ -269,6 +269,72 @@ export interface GscIndexingResult {
   }>;
 }
 
+/** Shape returned by inspectGscUrl. */
+export interface GscUrlInspectionResult {
+  inspectionUrl: string;
+  coverageState?: string; // e.g. "Submitted and indexed", "Discovered - currently not indexed"
+  verdict?: string; // "PASS", "FAIL", "NEUTRAL", "PARTIAL"
+  lastCrawlTime?: string;
+  googleCanonical?: string;
+  userCanonical?: string;
+  robotsTxtState?: string;
+  indexingState?: string;
+}
+
+/**
+ * Inspect a specific URL's Google Search index status.
+ * Uses the URL Inspection API (read-only).
+ * Quota: 2000 queries/day, 600/minute per project.
+ */
+export async function inspectGscUrl(
+  accessToken: string,
+  siteUrl: string,
+  inspectionUrl: string,
+): Promise<GscUrlInspectionResult> {
+  const res = await fetchWithTimeout(
+    "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ inspectionUrl, siteUrl }),
+    },
+  );
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`GSC URL Inspection failed (${res.status}): ${errText}`);
+  }
+
+  const data = (await res.json()) as {
+    inspectionResult?: {
+      indexStatusResult?: {
+        verdict?: string;
+        coverageState?: string;
+        lastCrawlTime?: string;
+        googleCanonical?: string;
+        userCanonical?: string;
+        robotsTxtState?: string;
+        indexingState?: string;
+      };
+    };
+  };
+
+  const index = data.inspectionResult?.indexStatusResult ?? {};
+  return {
+    inspectionUrl,
+    verdict: index.verdict,
+    coverageState: index.coverageState,
+    lastCrawlTime: index.lastCrawlTime,
+    googleCanonical: index.googleCanonical,
+    userCanonical: index.userCanonical,
+    robotsTxtState: index.robotsTxtState,
+    indexingState: index.indexingState,
+  };
+}
+
 /**
  * Query Search Console sitemaps endpoint for a site to get indexing info.
  */
