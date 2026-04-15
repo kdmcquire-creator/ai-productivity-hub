@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { verifyCronAuth } from "@/lib/cron-auth";
 import { tools } from "@/lib/tools";
 import { getAllNewsletters } from "@/lib/newsletters";
+import {
+  getGscAccessToken,
+  queryGscPerformance,
+  queryGscIndexing,
+} from "@/lib/gsc-client";
 
 export const dynamic = "force-dynamic";
 
@@ -49,10 +54,30 @@ interface TrafficSummary {
   error?: string;
 }
 
+interface GscSitePerformance {
+  siteUrl: string;
+  siteName: string;
+  clicks: number;
+  impressions: number;
+  ctr: string;
+  avgPosition: string;
+  topQueries: Array<{ query: string; clicks: number; impressions: number }>;
+}
+
+interface GscSummary {
+  period: string;
+  sites: GscSitePerformance[];
+  totalClicks: number;
+  totalImpressions: number;
+  available: boolean;
+  error?: string;
+}
+
 interface DigestPayload {
   generatedAt: string;
   sites: SiteHealthResult[];
   traffic: TrafficSummary;
+  gsc: GscSummary;
   newsletters: NewsletterSummary;
   affiliates: AffiliateSummary;
   actionItems: string[];
@@ -296,14 +321,116 @@ function getAffiliateSummary(): AffiliateSummary {
   };
 }
 
+/** GSC site properties for all 4 Moonsmoke sites. */
+const GSC_PROPERTIES = [
+  { siteUrl: "sc-domain:aiproductivityhub.co", siteName: "AI Productivity Hub" },
+  { siteUrl: "sc-domain:clarity-engine.ai", siteName: "Clarity Engine AI" },
+  { siteUrl: "sc-domain:aifinancehub.ai", siteName: "AI Finance Hub" },
+  { siteUrl: "sc-domain:legaltech-ai-hub.com", siteName: "LegalTech AI Hub" },
+];
+
+/** Fetch GSC search performance data for all 4 sites. */
+async function getGscSummary(): Promise<GscSummary> {
+  if (!process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
+    return {
+      period: "7d",
+      sites: [],
+      totalClicks: 0,
+      totalImpressions: 0,
+      available: false,
+      error: "GOOGLE_SERVICE_ACCOUNT_JSON not configured",
+    };
+  }
+
+  try {
+    const accessToken = await getGscAccessToken();
+
+    // Date range: 10 days ago to 3 days ago (GSC has 2-3 day data lag)
+    const now = new Date();
+    const endDate = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+    const startDate = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000);
+    const startStr = startDate.toISOString().split("T")[0];
+    const endStr = endDate.toISOString().split("T")[0];
+
+    // Query all 4 sites in parallel
+    const results = await Promise.allSettled(
+      GSC_PROPERTIES.map(async (prop) => {
+        const perf = await queryGscPerformance(
+          accessToken,
+          prop.siteUrl,
+          startStr,
+          endStr,
+        );
+        return {
+          siteUrl: prop.siteUrl,
+          siteName: prop.siteName,
+          clicks: perf.clicks,
+          impressions: perf.impressions,
+          ctr: (perf.ctr * 100).toFixed(1) + "%",
+          avgPosition: perf.position.toFixed(1),
+          topQueries: perf.topQueries.map((q) => ({
+            query: q.query,
+            clicks: q.clicks,
+            impressions: q.impressions,
+          })),
+        } satisfies GscSitePerformance;
+      }),
+    );
+
+    const sites: GscSitePerformance[] = results
+      .filter(
+        (r): r is PromiseFulfilledResult<GscSitePerformance> =>
+          r.status === "fulfilled",
+      )
+      .map((r) => r.value);
+
+    const totalClicks = sites.reduce((acc, s) => acc + s.clicks, 0);
+    const totalImpressions = sites.reduce((acc, s) => acc + s.impressions, 0);
+
+    return {
+      period: `${startStr} to ${endStr}`,
+      sites,
+      totalClicks,
+      totalImpressions,
+      available: true,
+    };
+  } catch (err) {
+    return {
+      period: "7d",
+      sites: [],
+      totalClicks: 0,
+      totalImpressions: 0,
+      available: false,
+      error: err instanceof Error ? err.message : "Unknown GSC error",
+    };
+  }
+}
+
 /** Derive actionable items from the digest data. */
 function deriveActionItems(
   sites: SiteHealthResult[],
   traffic: TrafficSummary,
+  gsc: GscSummary,
   newsletters: NewsletterSummary,
-  affiliates: AffiliateSummary
+  affiliates: AffiliateSummary,
 ): string[] {
   const items: string[] = [];
+
+  // GSC alerts
+  if (gsc.available) {
+    for (const site of gsc.sites) {
+      if (site.clicks === 0) {
+        items.push(`${site.siteName}: 0 clicks in GSC over the last 7 days — check indexing`);
+      }
+    }
+    if (gsc.totalImpressions < 100 && gsc.sites.length > 0) {
+      items.push(
+        `Very low total impressions across all sites (${gsc.totalImpressions}) — review search visibility`,
+      );
+    }
+  } else if (gsc.error) {
+    items.push(`GSC data unavailable: ${gsc.error}`);
+  }
 
   // Traffic alerts
   if (traffic.available) {
@@ -493,6 +620,73 @@ function buildDigestHtml(digest: DigestPayload): string {
       ` : `<p style="color:#9ca3af;font-size:14px;">${digest.traffic.error || "Traffic data not available. Add CLOUDFLARE_API_TOKEN to the PH worker."}</p>`}
     </div>
 
+    <!-- Search Performance (GSC) -->
+    <div style="padding:0 24px 24px;">
+      <h2 style="margin:0 0 16px;font-size:18px;color:#1a1a2e;">Search Performance (7 Days)</h2>
+      ${digest.gsc.available ? `
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+          <thead>
+            <tr style="background:#f9fafb;">
+              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Site</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Clicks</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Impressions</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">CTR</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Avg Position</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${digest.gsc.sites.map((s) => {
+              const clickColor = s.clicks === 0 ? "#ef4444" : "#111827";
+              return `<tr>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:500;">${s.siteName}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;font-weight:600;color:${clickColor};">${s.clicks.toLocaleString()}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;">${s.impressions.toLocaleString()}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;">${s.ctr}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;">${s.avgPosition}</td>
+              </tr>`;
+            }).join("")}
+            <tr style="background:#f9fafb;font-weight:600;">
+              <td style="padding:10px 12px;">Total</td>
+              <td style="padding:10px 12px;text-align:center;">${digest.gsc.totalClicks.toLocaleString()}</td>
+              <td style="padding:10px 12px;text-align:center;">${digest.gsc.totalImpressions.toLocaleString()}</td>
+              <td style="padding:10px 12px;text-align:center;" colspan="2"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      ${(() => {
+        // Collect top queries across all sites, dedupe, sort by clicks
+        const allQueries = digest.gsc.sites.flatMap((s) => s.topQueries);
+        const queryMap = new Map<string, { clicks: number; impressions: number }>();
+        for (const q of allQueries) {
+          const existing = queryMap.get(q.query);
+          if (existing) {
+            existing.clicks += q.clicks;
+            existing.impressions += q.impressions;
+          } else {
+            queryMap.set(q.query, { clicks: q.clicks, impressions: q.impressions });
+          }
+        }
+        const topFive = Array.from(queryMap.entries())
+          .sort((a, b) => b[1].clicks - a[1].clicks)
+          .slice(0, 5);
+
+        if (topFive.length === 0) return "";
+
+        return `
+        <div style="margin-top:12px;">
+          <h3 style="margin:0 0 8px;font-size:14px;color:#6b7280;font-weight:600;">Top Queries</h3>
+          <ol style="margin:0;padding:0 0 0 20px;font-size:14px;">
+            ${topFive.map(([query, data]) =>
+              `<li style="margin-bottom:4px;"><strong>${query}</strong> &mdash; ${data.clicks} click${data.clicks !== 1 ? "s" : ""}, ${data.impressions.toLocaleString()} impressions</li>`
+            ).join("")}
+          </ol>
+        </div>`;
+      })()}
+      ` : `<p style="color:#9ca3af;font-size:14px;">${digest.gsc.error || "GSC data not available. Add GOOGLE_SERVICE_ACCOUNT_JSON to the PH worker."}</p>`}
+    </div>
+
     <!-- Newsletter Queue -->
     <div style="padding:0 24px 24px;">
       <h2 style="margin:0 0 12px;font-size:18px;color:#1a1a2e;">Newsletter Queue (PH)</h2>
@@ -649,9 +843,10 @@ export async function POST(request: Request) {
 
   // ------- Gather data in parallel -------
   const selfOrigin = reqUrl.origin;
-  const [siteResults, traffic, newsletters, affiliates] = await Promise.all([
+  const [siteResults, traffic, gsc, newsletters, affiliates] = await Promise.all([
     Promise.allSettled(SITES.map((s) => checkSite(s, selfOrigin))),
     getTrafficSummary(),
+    getGscSummary(),
     getNewsletterSummary(),
     Promise.resolve(getAffiliateSummary()),
   ]);
@@ -671,12 +866,13 @@ export async function POST(request: Request) {
         }
   );
 
-  const actionItems = deriveActionItems(sites, traffic, newsletters, affiliates);
+  const actionItems = deriveActionItems(sites, traffic, gsc, newsletters, affiliates);
 
   const digest: DigestPayload = {
     generatedAt: now.toISOString(),
     sites,
     traffic,
+    gsc,
     newsletters,
     affiliates,
     actionItems,
