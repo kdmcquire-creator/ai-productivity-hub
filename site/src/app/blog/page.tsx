@@ -9,7 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
-  const [featuredPost, ...remainingPosts] = blogPosts;
+  const featuredBlogPosts = blogPosts.filter((p) => p.featured);
+  const nonFeaturedPosts = blogPosts.filter((p) => !p.featured);
+  const [featuredPost, ...otherFeatured] = featuredBlogPosts;
+  const remainingPosts = [...otherFeatured, ...nonFeaturedPosts];
 
   return (
     <>
@@ -72,7 +75,7 @@ export default function BlogPage() {
           {remainingPosts.length > 0 && (
             <>
               <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">
-                More Articles
+                {otherFeatured.length > 0 ? "Featured & Recent" : "More Articles"}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {remainingPosts.map((post) => (
@@ -92,6 +95,11 @@ export default function BlogPage() {
                         <span className="text-xs text-gray-400">
                           {post.readTime}
                         </span>
+                        {post.featured && (
+                          <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+                            Featured
+                          </span>
+                        )}
                       </div>
                       <h2 className="font-bold text-gray-900 text-lg mb-2 group-hover:text-blue-600 transition leading-snug">
                         {post.title}

@@ -7,7 +7,10 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 
 export default function HomePage() {
   const featuredTools = tools.slice(0, 6);
-  const [featuredPost, ...remainingPosts] = blogPosts;
+  const featuredBlogPosts = blogPosts.filter((p) => p.featured);
+  const nonFeaturedPosts = blogPosts.filter((p) => !p.featured);
+  const [featuredPost, ...otherFeatured] = featuredBlogPosts;
+  const remainingPosts = [...otherFeatured, ...nonFeaturedPosts].slice(0, 5);
 
   return (
     <>
@@ -191,6 +194,11 @@ export default function HomePage() {
                         <span>{post.date}</span>
                         <span>&middot;</span>
                         <span>{post.readTime}</span>
+                        {post.featured && (
+                          <span className="ml-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                            Featured
+                          </span>
+                        )}
                       </div>
                       <h3 className="font-bold text-gray-900 text-lg mb-2 group-hover:text-blue-600 transition">
                         {post.title}
