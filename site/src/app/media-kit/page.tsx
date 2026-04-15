@@ -4,6 +4,9 @@ export const metadata: Metadata = {
   title: "Media Kit 2026 — Moonsmoke Network",
   description:
     "Partnership and media information for Moonsmoke Network, an independent AI content publisher operating four niche sites across productivity, SEO, personal finance, and legal technology.",
+  alternates: {
+    canonical: "https://aiproductivityhub.co/media-kit/",
+  },
   openGraph: {
     title: "Media Kit 2026 — Moonsmoke Network",
     description:

@@ -1,5 +1,7 @@
 import Link from "next/link";
-import NewsletterSignup from "@/components/NewsletterSignup";
+import Image from "next/image";
+import SubscribeForm from "@/components/SubscribeForm";
+import SubscribeModal from "@/components/SubscribeModal";
 
 const footerLinks = [
   { href: "/about/", label: "About" },
@@ -13,14 +15,18 @@ const footerLinks = [
 
 export default function Footer() {
   return (
+    <>
     <footer className="bg-gray-50 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Footer Newsletter */}
         <div className="max-w-md mx-auto mb-10">
-          <p className="text-sm font-medium text-gray-700 text-center mb-3">
+          <p className="text-sm font-medium text-gray-700 text-center mb-1">
             Get weekly AI tool picks in your inbox
           </p>
-          <NewsletterSignup source="footer" variant="inline" />
+          <p className="text-xs text-gray-500 text-center mb-3">
+            Get AI productivity tool reviews + workflow guides. Weekly-ish. No spam.
+          </p>
+          <SubscribeForm source="footer" variant="inline" />
         </div>
 
         <div className="flex flex-wrap justify-center gap-6 mb-8">
@@ -62,11 +68,36 @@ export default function Footer() {
           </a>
           {" "}· As an Amazon Associate I earn from qualifying purchases.
         </p>
-        <p className="text-xs text-gray-400 text-center">
+        <p className="text-xs text-gray-400 text-center mb-4">
           &copy; {new Date().getFullYear()} AI Productivity Hub. All rights
           reserved.
         </p>
+        {/* Published by Moonsmoke LLC */}
+        <div className="border-t border-gray-200 pt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
+          <Image
+            src="/moonsmoke/logo.png"
+            alt="Moonsmoke LLC"
+            width={24}
+            height={24}
+            className="rounded"
+          />
+          <span>
+            Published by Moonsmoke LLC &bull; Austin, Texas &bull;{" "}
+            <Link
+              href="/about/editorial-team/"
+              className="hover:text-blue-600 transition underline"
+            >
+              Editorial Team
+            </Link>
+          </span>
+        </div>
       </div>
     </footer>
+    <SubscribeModal
+      heading="Stay ahead of the AI curve"
+      description="Get AI productivity tool reviews + workflow guides. Weekly-ish. No spam."
+      source="modal_scroll"
+    />
+    </>
   );
 }

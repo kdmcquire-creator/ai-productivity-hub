@@ -21,6 +21,9 @@ export async function generateMetadata({
   return {
     title: `Articles by ${author.name}`,
     description: `Browse all articles written by ${author.name} on AI Productivity Hub. ${author.bio}`,
+    alternates: {
+      canonical: `https://aiproductivityhub.co/author/${author.slug}/`,
+    },
   };
 }
 

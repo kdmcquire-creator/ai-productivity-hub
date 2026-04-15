@@ -28,6 +28,9 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `https://aiproductivityhub.co/blog/${post.slug}/`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,

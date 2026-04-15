@@ -30,6 +30,9 @@ export async function generateMetadata({
   return {
     title: comparison.title,
     description: comparison.excerpt,
+    alternates: {
+      canonical: `${BASE_URL}/compare/${comparison.slug}/`,
+    },
     openGraph: {
       title: comparison.title,
       description: comparison.excerpt,

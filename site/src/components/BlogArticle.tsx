@@ -8,6 +8,7 @@ import SiteGroundLeaderboard from "@/components/SiteGroundLeaderboard";
 import { NordVPNLeaderboard } from "@/components/NordVPNLeaderboard";
 import SidebarAmazon from "@/components/SidebarAmazon";
 import RelatedPosts from "@/components/RelatedPosts";
+import SubscribeForm from "@/components/SubscribeForm";
 
 /** Convert markdown-style [text](url) links in a string to <a> elements. */
 function parseLinks(text: string): React.ReactNode {
@@ -178,6 +179,17 @@ export default function BlogArticle({ post }: { post: BlogPost }) {
                 <SectionBlock section={post.verdict} />
               </>
             )}
+
+            {/* Newsletter signup — directly after the verdict so engaged
+                readers see it at peak intent. */}
+            <div className="my-12">
+              <SubscribeForm
+                source="blog_article"
+                variant="card"
+                heading="Liked this? Get the next one in your inbox."
+                description="Get AI productivity tool reviews + workflow guides. Weekly-ish. No spam."
+              />
+            </div>
 
             {/* Post-article sponsor banner */}
             <NordVPNLeaderboard />

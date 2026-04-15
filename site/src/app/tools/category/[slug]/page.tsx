@@ -29,6 +29,9 @@ export async function generateMetadata({
   return {
     title: `Best AI ${category.name} Tools`,
     description: `Discover and compare the best AI tools for ${category.name.toLowerCase()}. In-depth reviews, pricing, and recommendations to help you choose the right ${category.name.toLowerCase()} tool.`,
+    alternates: {
+      canonical: `https://aiproductivityhub.co/tools/category/${category.slug}/`,
+    },
     openGraph: {
       images: [
         {

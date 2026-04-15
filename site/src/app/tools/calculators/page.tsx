@@ -1,8 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { calculators } from "@/lib/calculators";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 
 const BASE_URL = "https://aiproductivityhub.co";
+
+export const metadata: Metadata = {
+  title: "Free AI Calculators & Estimator Tools",
+  description:
+    "Free interactive calculators to estimate AI tool ROI, token costs, meeting spend, automation savings, and more. Make data-driven decisions about AI adoption.",
+  alternates: {
+    canonical: `${BASE_URL}/tools/calculators/`,
+  },
+};
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   "chart-bar": (

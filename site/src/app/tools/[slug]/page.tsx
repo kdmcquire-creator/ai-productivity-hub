@@ -33,6 +33,9 @@ export async function generateMetadata({
   return {
     title: `${tool.name} Review - Features, Pricing & Alternatives`,
     description: tool.description,
+    alternates: {
+      canonical: `https://aiproductivityhub.co/tools/${tool.slug}/`,
+    },
     openGraph: {
       images: [
         {

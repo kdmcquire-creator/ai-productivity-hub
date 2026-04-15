@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Disclaimer",
+  alternates: {
+    canonical: "https://aiproductivityhub.co/disclaimer/",
+  },
 };
 
 export default function DisclaimerPage() {

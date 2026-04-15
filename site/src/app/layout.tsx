@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { headers } from "next/headers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
@@ -17,6 +16,13 @@ export const metadata: Metadata = {
   },
   description:
     "Discover, compare, and choose the best AI productivity tools for writing, design, marketing, development, and more. In-depth reviews, comparisons, and guides to help you work smarter.",
+  // Default canonical for the home route. Every child page's own
+  // `generateMetadata` / `metadata` export overrides this with its own
+  // `alternates.canonical` so we never accidentally point two URLs at one
+  // canonical.
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/logo.svg",
     apple: "/logo.svg",
@@ -52,25 +58,14 @@ export const metadata: Metadata = {
   },
 };
 
-const SITE_URL = "https://aiproductivityhub.co";
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Read the pathname stamped by middleware so we can build an accurate
-  // canonical URL without a client-side hook.
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") ?? "/";
-  // next.config.js has trailingSlash: true — ensure the canonical always ends
-  // with "/" (the pathname from middleware already does for page routes).
-  const canonicalUrl = `${SITE_URL}${pathname.endsWith("/") ? pathname : `${pathname}/`}`;
-
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href={canonicalUrl} />
         {/* Google Tag Manager */}
         {GTM_ID && (
           <Script id="gtm-head" strategy="afterInteractive">

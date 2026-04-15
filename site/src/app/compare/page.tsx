@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "AI Tool Comparisons — Head-to-Head Reviews",
   description:
     "Side-by-side comparisons of the best AI productivity tools. Find out which tool wins on pricing, features, and ease of use before you buy.",
+  alternates: {
+    canonical: "https://aiproductivityhub.co/compare/",
+  },
   openGraph: {
     title: "AI Tool Comparisons — Head-to-Head Reviews",
     description:

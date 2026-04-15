@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About",
+  alternates: {
+    canonical: "https://aiproductivityhub.co/about/",
+  },
 };
 
 export default function AboutPage() {

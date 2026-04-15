@@ -48,7 +48,12 @@ export function OrganizationJsonLd() {
         "@type": "Organization",
         name: "AI Productivity Hub",
         url: BASE_URL,
-        sameAs: [],
+        logo: `${BASE_URL}/moonsmoke/logo.png`,
+        sameAs: [
+          "https://www.linkedin.com/company/moonsmoke/",
+          "https://twitter.com/MoonsmokeNetwrk",
+          "https://www.pinterest.com/moonsmokecontent/",
+        ],
       }}
     />
   );
@@ -114,14 +119,15 @@ export function ArticleJsonLd({ post }: { post: BlogPost }) {
         description: post.excerpt,
         datePublished: post.dateISO,
         author: {
-          "@type": "Person",
-          name: post.author,
-          url: `${BASE_URL}/author/${post.authorSlug}/`,
+          "@type": "Organization",
+          name: "The AI Productivity Hub Editorial Team",
+          url: `${BASE_URL}/about/editorial-team/`,
         },
         publisher: {
           "@type": "Organization",
           name: "AI Productivity Hub",
           url: BASE_URL,
+          logo: `${BASE_URL}/moonsmoke/logo.png`,
         },
         mainEntityOfPage: {
           "@type": "WebPage",

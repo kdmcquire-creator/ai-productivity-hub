@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
+  alternates: {
+    canonical: "https://aiproductivityhub.co/privacy/",
+  },
 };
 
 export default function PrivacyPolicyPage() {

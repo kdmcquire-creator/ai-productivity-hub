@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: "Affiliate & Advertising Disclosure",
+  alternates: {
+    canonical: "https://aiproductivityhub.co/disclosure/",
+  },
+};
 
 export default function DisclosurePage() {
   return (

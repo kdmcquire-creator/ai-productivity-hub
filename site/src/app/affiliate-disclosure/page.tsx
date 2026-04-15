@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Affiliate Disclosure",
+  alternates: {
+    canonical: "https://aiproductivityhub.co/affiliate-disclosure/",
+  },
 };
 
 export default function AffiliateDisclosurePage() {

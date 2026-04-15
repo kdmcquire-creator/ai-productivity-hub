@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: "Contact Us",
   description:
     "Get in touch with the AI Productivity Hub team. Questions, suggestions, partnership inquiries, or tool submissions welcome.",
+  alternates: {
+    canonical: "https://aiproductivityhub.co/contact/",
+  },
 };
 
 export default function ContactPage() {

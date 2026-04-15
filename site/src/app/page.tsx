@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { tools, categories } from "@/lib/tools";
 import { blogPosts } from "@/lib/blog";
 import AdUnit from "@/components/AdUnit";
 import { WebSiteJsonLd, OrganizationJsonLd } from "@/components/JsonLd";
 import NewsletterSignup from "@/components/NewsletterSignup";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "https://aiproductivityhub.co/",
+  },
+};
 
 export default function HomePage() {
   const featuredTools = tools.slice(0, 6);
