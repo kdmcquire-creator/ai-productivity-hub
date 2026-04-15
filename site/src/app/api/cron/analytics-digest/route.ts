@@ -123,7 +123,7 @@ async function checkRobots(baseUrl: string): Promise<boolean> {
 async function checkSite(site: {
   name: string;
   url: string;
-}): Promise<SiteHealthResult> {
+}, selfOrigin?: string): Promise<SiteHealthResult> {
   const result: SiteHealthResult = {
     name: site.name,
     url: site.url,
@@ -133,12 +133,17 @@ async function checkSite(site: {
     robotsAccessible: null,
   };
 
+  // If this is the same worker (self-check), use the internal origin to avoid
+  // Cloudflare's 522 error on self-referential Worker fetch.
+  const isSelf = selfOrigin && new URL(site.url).origin === new URL(selfOrigin).origin;
+  const checkUrl = isSelf ? selfOrigin : site.url;
+
   // Run homepage, sitemap, and robots checks in parallel
   const [homepageResult, sitemapResult, robotsResult] =
     await Promise.allSettled([
-      checkHomepage(site.url),
-      countSitemapUrls(site.url),
-      checkRobots(site.url),
+      checkHomepage(checkUrl),
+      countSitemapUrls(checkUrl),
+      checkRobots(checkUrl),
     ]);
 
   if (homepageResult.status === "fulfilled") {
@@ -172,13 +177,12 @@ async function getTrafficSummary(): Promise<TrafficSummary> {
   const now = new Date();
   const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
-  const dateFmt = (d: Date) => d.toISOString().split("T")[0];
 
   const query = `query {
     viewer {
       accounts(filter: { accountTag: "${accountId}" }) {
         current: workersInvocationsAdaptive(
-          filter: { datetime_geq: "${dateFmt(sevenDaysAgo)}", datetime_leq: "${dateFmt(now)}" }
+          filter: { datetime_geq: "${sevenDaysAgo.toISOString()}", datetime_leq: "${now.toISOString()}" }
           limit: 10
           orderBy: [sum_requests_DESC]
         ) {
@@ -186,7 +190,7 @@ async function getTrafficSummary(): Promise<TrafficSummary> {
           sum { requests errors }
         }
         previous: workersInvocationsAdaptive(
-          filter: { datetime_geq: "${dateFmt(fourteenDaysAgo)}", datetime_leq: "${dateFmt(sevenDaysAgo)}" }
+          filter: { datetime_geq: "${fourteenDaysAgo.toISOString()}", datetime_leq: "${sevenDaysAgo.toISOString()}" }
           limit: 10
           orderBy: [sum_requests_DESC]
         ) {
@@ -644,8 +648,9 @@ export async function POST(request: Request) {
   );
 
   // ------- Gather data in parallel -------
+  const selfOrigin = reqUrl.origin;
   const [siteResults, traffic, newsletters, affiliates] = await Promise.all([
-    Promise.allSettled(SITES.map(checkSite)),
+    Promise.allSettled(SITES.map((s) => checkSite(s, selfOrigin))),
     getTrafficSummary(),
     getNewsletterSummary(),
     Promise.resolve(getAffiliateSummary()),
