@@ -32,9 +32,27 @@ interface AffiliateSummary {
   withoutAffiliateUrl: number;
 }
 
+interface WorkerTraffic {
+  name: string;
+  requests7d: number;
+  errors7d: number;
+  errorRate: string;
+  requestsDelta: string; // vs prior 7 days
+}
+
+interface TrafficSummary {
+  period: string;
+  workers: WorkerTraffic[];
+  totalRequests: number;
+  totalErrors: number;
+  available: boolean;
+  error?: string;
+}
+
 interface DigestPayload {
   generatedAt: string;
   sites: SiteHealthResult[];
+  traffic: TrafficSummary;
   newsletters: NewsletterSummary;
   affiliates: AffiliateSummary;
   actionItems: string[];
@@ -45,14 +63,15 @@ interface DigestPayload {
 // ---------------------------------------------------------------------------
 
 const SITES = [
-  { name: "AI Productivity Hub", url: "https://aiproductivityhub.co" },
-  { name: "Clarity Engine AI", url: "https://clarity-engine.ai" },
-  { name: "AI Finance Hub", url: "https://aifinancehub.ai" },
-  { name: "LegalTech AI Hub", url: "https://legaltech-ai-hub.com" },
+  { name: "AI Productivity Hub", url: "https://aiproductivityhub.co", worker: "ai-productivity-hub" },
+  { name: "Clarity Engine AI", url: "https://clarity-engine.ai", worker: "clarity-engine-ai" },
+  { name: "AI Finance Hub", url: "https://aifinancehub.ai", worker: "ai-finance-hub" },
+  { name: "LegalTech AI Hub", url: "https://legaltech-ai-hub.com", worker: "legaltech-ai-hub" },
 ];
 
 const FETCH_TIMEOUT_MS = 10_000;
 const SLOW_THRESHOLD_MS = 3_000;
+const CF_GQL_URL = "https://api.cloudflare.com/client/v4/graphql";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -141,6 +160,113 @@ async function checkSite(site: {
   return result;
 }
 
+/** Fetch 7-day traffic data from Cloudflare Workers Analytics GraphQL API. */
+async function getTrafficSummary(): Promise<TrafficSummary> {
+  const cfToken = process.env.CLOUDFLARE_API_TOKEN;
+  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID || "3582b6bec8f0d717e1d4a926447647b6";
+
+  if (!cfToken) {
+    return { period: "7d", workers: [], totalRequests: 0, totalErrors: 0, available: false, error: "CLOUDFLARE_API_TOKEN not configured" };
+  }
+
+  const now = new Date();
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+  const dateFmt = (d: Date) => d.toISOString().split("T")[0];
+
+  const query = `query {
+    viewer {
+      accounts(filter: { accountTag: "${accountId}" }) {
+        current: workersInvocationsAdaptive(
+          filter: { datetime_geq: "${dateFmt(sevenDaysAgo)}", datetime_leq: "${dateFmt(now)}" }
+          limit: 10
+          orderBy: [sum_requests_DESC]
+        ) {
+          dimensions { scriptName }
+          sum { requests errors }
+        }
+        previous: workersInvocationsAdaptive(
+          filter: { datetime_geq: "${dateFmt(fourteenDaysAgo)}", datetime_leq: "${dateFmt(sevenDaysAgo)}" }
+          limit: 10
+          orderBy: [sum_requests_DESC]
+        ) {
+          dimensions { scriptName }
+          sum { requests errors }
+        }
+      }
+    }
+  }`;
+
+  try {
+    const res = await fetchWithTimeout(CF_GQL_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${cfToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    if (!res.ok) {
+      return { period: "7d", workers: [], totalRequests: 0, totalErrors: 0, available: false, error: `CF API ${res.status}` };
+    }
+
+    const json = (await res.json()) as {
+      data?: {
+        viewer?: {
+          accounts?: Array<{
+            current?: Array<{ dimensions: { scriptName: string }; sum: { requests: number; errors: number } }>;
+            previous?: Array<{ dimensions: { scriptName: string }; sum: { requests: number; errors: number } }>;
+          }>;
+        };
+      };
+    };
+
+    const account = json.data?.viewer?.accounts?.[0];
+    const current = account?.current ?? [];
+    const previous = account?.previous ?? [];
+
+    // Build lookup for previous period
+    const prevMap = new Map<string, number>();
+    for (const entry of previous) {
+      prevMap.set(entry.dimensions.scriptName, entry.sum.requests);
+    }
+
+    // Map to our site names
+    const siteWorkerNames = SITES.map((s) => s.worker);
+    const workers: WorkerTraffic[] = current
+      .filter((e) => siteWorkerNames.includes(e.dimensions.scriptName))
+      .map((e) => {
+        const site = SITES.find((s) => s.worker === e.dimensions.scriptName);
+        const prevReqs = prevMap.get(e.dimensions.scriptName) ?? 0;
+        const delta = prevReqs > 0
+          ? ((e.sum.requests - prevReqs) / prevReqs * 100).toFixed(1) + "%"
+          : "N/A";
+        const errRate = e.sum.requests > 0
+          ? ((e.sum.errors / e.sum.requests) * 100).toFixed(2) + "%"
+          : "0%";
+
+        return {
+          name: site?.name ?? e.dimensions.scriptName,
+          requests7d: e.sum.requests,
+          errors7d: e.sum.errors,
+          errorRate: errRate,
+          requestsDelta: delta,
+        };
+      });
+
+    const totalRequests = workers.reduce((acc, w) => acc + w.requests7d, 0);
+    const totalErrors = workers.reduce((acc, w) => acc + w.errors7d, 0);
+
+    return { period: "7d", workers, totalRequests, totalErrors, available: true };
+  } catch (err) {
+    return {
+      period: "7d", workers: [], totalRequests: 0, totalErrors: 0, available: false,
+      error: err instanceof Error ? err.message : "Unknown error",
+    };
+  }
+}
+
 /** Compile newsletter queue stats. */
 async function getNewsletterSummary(): Promise<NewsletterSummary> {
   try {
@@ -169,10 +295,25 @@ function getAffiliateSummary(): AffiliateSummary {
 /** Derive actionable items from the digest data. */
 function deriveActionItems(
   sites: SiteHealthResult[],
+  traffic: TrafficSummary,
   newsletters: NewsletterSummary,
   affiliates: AffiliateSummary
 ): string[] {
   const items: string[] = [];
+
+  // Traffic alerts
+  if (traffic.available) {
+    for (const w of traffic.workers) {
+      if (parseFloat(w.errorRate) > 5) {
+        items.push(`${w.name}: high error rate (${w.errorRate}) over 7 days`);
+      }
+      if (w.requestsDelta !== "N/A" && parseFloat(w.requestsDelta) < -30) {
+        items.push(`${w.name}: traffic dropped ${w.requestsDelta} vs prior week`);
+      }
+    }
+  } else if (traffic.error) {
+    items.push(`Traffic data unavailable: ${traffic.error}`);
+  }
 
   for (const site of sites) {
     if (site.error) {
@@ -306,6 +447,46 @@ function buildDigestHtml(digest: DigestPayload): string {
           </tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Traffic (7-Day) -->
+    <div style="padding:0 24px 24px;">
+      <h2 style="margin:0 0 16px;font-size:18px;color:#1a1a2e;">Traffic (Last 7 Days)</h2>
+      ${digest.traffic.available ? `
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+          <thead>
+            <tr style="background:#f9fafb;">
+              <th style="padding:10px 12px;text-align:left;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Site</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Requests</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">vs Prior Week</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Errors</th>
+              <th style="padding:10px 12px;text-align:center;border-bottom:2px solid #e5e7eb;color:#6b7280;font-weight:600;">Error Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${digest.traffic.workers.map((w) => {
+              const deltaColor = w.requestsDelta.startsWith("-") ? "#ef4444" : "#16a34a";
+              const errColor = parseFloat(w.errorRate) > 2 ? "#ef4444" : "#16a34a";
+              return `<tr>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-weight:500;">${w.name}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;font-weight:600;">${w.requests7d.toLocaleString()}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;color:${deltaColor};font-weight:600;">${w.requestsDelta === "N/A" ? "New" : w.requestsDelta}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;">${w.errors7d.toLocaleString()}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;color:${errColor};">${w.errorRate}</td>
+              </tr>`;
+            }).join("")}
+            <tr style="background:#f9fafb;font-weight:600;">
+              <td style="padding:10px 12px;">Total</td>
+              <td style="padding:10px 12px;text-align:center;">${digest.traffic.totalRequests.toLocaleString()}</td>
+              <td style="padding:10px 12px;text-align:center;">—</td>
+              <td style="padding:10px 12px;text-align:center;">${digest.traffic.totalErrors.toLocaleString()}</td>
+              <td style="padding:10px 12px;text-align:center;">${digest.traffic.totalRequests > 0 ? ((digest.traffic.totalErrors / digest.traffic.totalRequests) * 100).toFixed(2) + "%" : "0%"}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      ` : `<p style="color:#9ca3af;font-size:14px;">${digest.traffic.error || "Traffic data not available. Add CLOUDFLARE_API_TOKEN to the PH worker."}</p>`}
     </div>
 
     <!-- Newsletter Queue -->
@@ -463,8 +644,9 @@ export async function POST(request: Request) {
   );
 
   // ------- Gather data in parallel -------
-  const [siteResults, newsletters, affiliates] = await Promise.all([
+  const [siteResults, traffic, newsletters, affiliates] = await Promise.all([
     Promise.allSettled(SITES.map(checkSite)),
+    getTrafficSummary(),
     getNewsletterSummary(),
     Promise.resolve(getAffiliateSummary()),
   ]);
@@ -484,11 +666,12 @@ export async function POST(request: Request) {
         }
   );
 
-  const actionItems = deriveActionItems(sites, newsletters, affiliates);
+  const actionItems = deriveActionItems(sites, traffic, newsletters, affiliates);
 
   const digest: DigestPayload = {
     generatedAt: now.toISOString(),
     sites,
+    traffic,
     newsletters,
     affiliates,
     actionItems,
